@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="I_AssertionListener" Id="{89202e15-1b78-4ac0-bedd-684ba8d1abd0}">
+    <Declaration><![CDATA[INTERFACE I_AssertionListener
+]]></Declaration>
+    <Method Name="OnAssertionFailed" Id="{2c65d300-8a97-4188-96db-ffaba2248aa9}">
+      <Declaration><![CDATA[METHOD OnAssertionFailed
+VAR_INPUT
+    AssertionMessage : T_MaxString;
+    ExpectedAsString : T_MaxString;
+    ActualAsString   : T_MaxString;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="TestName" Id="{52a845f7-0eb4-4b7f-a3c4-11df1251afbb}">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{b70366b9-6e27-49b5-9648-d692cb9b5749}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

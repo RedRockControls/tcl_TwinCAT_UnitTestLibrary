@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="I_ListOfTests" Id="{893e7e43-a7a7-456e-9517-e3d21b74d5fa}">
+    <Declaration><![CDATA[INTERFACE I_ListOfTests
+]]></Declaration>
+    <Method Name="AddTest" Id="{e9ad3765-0af3-47ea-a604-b236c0477164}">
+      <Declaration><![CDATA[METHOD AddTest
+VAR_INPUT
+    Test : I_UnitTest;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Count" Id="{cd9ef367-f066-49ff-883b-2dba33c01866}">
+      <Declaration><![CDATA[PROPERTY Count : DINT
+]]></Declaration>
+      <Get Name="Get" Id="{b7f24ab7-3fd8-4494-9397-81af06512e9e}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="FindTestIndex" Id="{ef55a53b-f2a4-443d-a008-5ccaec33d191}">
+      <Declaration><![CDATA[METHOD FindTestIndex : DINT
+VAR_INPUT
+	Test : I_UnitTest;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="GetTest" Id="{bc5e0acc-0aa8-4117-b203-55864887c248}">
+      <Declaration><![CDATA[METHOD GetTest : I_UnitTest
+VAR_INPUT
+    Index : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="SetTest" Id="{f50ad0a9-50fa-4169-af3d-919c413751b1}">
+      <Declaration><![CDATA[METHOD SetTest : I_UnitTest
+VAR_INPUT
+    Test : I_UnitTest;
+    Index : DINT;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="TestGroupName" Id="{64854b96-8b20-4b92-aaa4-265f6f43b2cd}">
+      <Declaration><![CDATA[PROPERTY TestGroupName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{36f61fd4-09fe-4755-a67d-d4ee53f9e0c3}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

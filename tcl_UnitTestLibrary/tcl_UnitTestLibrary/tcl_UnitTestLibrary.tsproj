@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.32">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{63757818-08A3-4708-9DA7-F5CE769D35BD}" PersistentType="true">UnitTestEvents</Name>
+			<DisplayName TxtId=""><![CDATA[Unit Test Events]]></DisplayName>
+			<EventId>
+				<Name Id="1">AssertionFailed</Name>
+				<DisplayName TxtId=""><![CDATA[{0}: {1}, {2}]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="2">TestPassed</Name>
+				<DisplayName TxtId=""><![CDATA[Test Passed]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="3">TestFailed</Name>
+				<DisplayName TxtId=""><![CDATA[Test Failed : {0}]]></DisplayName>
+				<Severity>Error</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="4">TestRunComplete</Name>
+				<DisplayName TxtId=""><![CDATA[Test Run Complete: {0} Tests Passed, {1} Tests Failed]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<EventId>
+				<Name Id="5">TestRunStarting</Name>
+				<DisplayName TxtId=""><![CDATA[Starting {0} Unit Tests]]></DisplayName>
+				<Severity>Info</Severity>
+			</EventId>
+			<Hides>
+				<Hide GUID="{0C68E550-B76B-40FB-AC22-16C1ECE0A510}"/>
+				<Hide GUID="{B332D2DF-C340-49B5-9DF7-EEE13EC44EA4}"/>
+				<Hide GUID="{745301B1-2E75-4A60-9EBC-0B65386B4C4A}"/>
+				<Hide GUID="{DEE31D0F-F9EF-4A30-8052-8ABE6B859BF3}"/>
+				<Hide GUID="{B743B92E-1A4E-48C0-AF5B-79F798343508}"/>
+				<Hide GUID="{E9ABEB88-EC8F-4CFE-96E1-2CABE05685A0}"/>
+				<Hide GUID="{E1F64B48-6614-45E3-920F-976B387B57BA}"/>
+				<Hide GUID="{1E75219A-B1D1-4CC6-9DB0-8E83F75E36C8}"/>
+				<Hide GUID="{20E3D113-6582-415B-B5B7-2C16A5145735}"/>
+			</Hides>
+		</DataType>
+	</DataTypes>
+	<Project ProjectGUID="{9BD4BDFF-636C-4050-B9FD-A19D7CCB6398}" Target64Bit="true" ShowHideConfigurations="#x3c6">
+		<System>
+			<Settings DontCheckTarget="192.168.2.108.1.1"/>
+			<Tasks>
+				<Task Id="4" Priority="20" CycleTime="100000" AmsPort="351" AdtTasks="true">
+					<Name>PlcTask</Name>
+				</Task>
+			</Tasks>
+		</System>
+		<Plc>
+			<Project File="tcl_UnitTestLibrary.xti"/>
+			<Project File="UnitTests.xti"/>
+		</Plc>
+	</Project>
+</TcSmProject>

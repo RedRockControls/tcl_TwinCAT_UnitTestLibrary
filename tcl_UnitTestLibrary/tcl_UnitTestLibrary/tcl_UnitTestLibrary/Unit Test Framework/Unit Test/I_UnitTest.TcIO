@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <Itf Name="I_UnitTest" Id="{4767838a-0718-44ba-96a4-9c2a6c57af2f}">
+    <Declaration><![CDATA[INTERFACE I_UnitTest EXTENDS __SYSTEM.IQueryInterface
+]]></Declaration>
+    <Folder Name="Methods" Id="{f66815a2-79a3-4000-9a33-2104bd81cf4b}" />
+    <Folder Name="Properties" Id="{2f5f335d-ae17-4ae8-a4a7-94a2bd920680}" />
+    <Method Name="Init" Id="{09ec4ed5-09ae-4553-8c1c-9702dbc2130b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="RunTest" Id="{e90f441b-bd22-4536-957d-3ae775f3b3a3}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FINAL RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="TestGroupName" Id="{97ae0ab3-8c42-4d0f-ace4-d4e83b168e30}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestGroupName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{f41cb4ec-1f62-482a-b97b-8d43551fb276}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="TestName" Id="{5c23a95a-40ec-496d-ae11-38da75a2e164}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{1cb632ab-f9ed-4413-9cfb-0888256d6174}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+  </Itf>
+</TcPlcObject>

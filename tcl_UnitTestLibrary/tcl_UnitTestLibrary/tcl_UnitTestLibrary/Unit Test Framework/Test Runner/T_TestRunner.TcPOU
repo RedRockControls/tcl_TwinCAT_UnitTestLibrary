@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="T_TestRunner" Id="{c7f35beb-7079-466d-ae1a-1beb011dea9f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner
+VAR
+    State : (
+        sInit,
+        sGetTest,
+        sRunTest,
+        sCheckResults
+    );
+    ResultsSummary          : T_MaxString;
+    PassedTestsCount        : DINT;
+    FailedTestsCount        : DINT;
+    TestList                : T_ListOfTests(Capacity := 50);
+    TestIterator            : T_TestIterator;
+    CurrentTest             : I_UnitTest;
+
+	RunTests : BOOL;
+    TestFailed    : BOOL;
+    TestCompleted : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE State OF
+    sInit:
+        IF RunTests THEN
+            RunTests := FALSE;
+            TestIterator.Initialise(TestList);
+            ResultsSummary   := '';
+            FailedTestsCount := 0;
+            PassedTestsCount := 0;
+            State            := sGetTest;
+        END_IF
+
+    sGetTest:
+        IF TestIterator.HasMore() THEN
+            CurrentTest := TestIterator.GetNext();
+            CurrentTest.Init();
+            State := sRunTest;
+        ELSE
+            CurrentTest := 0;
+            State       := sCheckResults;
+        END_IF
+
+    sRunTest:
+        CurrentTest.RunTest(TestCompleted => TestCompleted,
+                            TestFailed    => TestFailed);
+
+        IF TestCompleted THEN
+            IF TestFailed THEN
+                FailedTestsCount := FailedTestsCount + 1;
+            ELSE
+                PassedTestsCount := PassedTestsCount + 1;
+            END_IF
+            State := sGetTest;
+        END_IF
+
+    sCheckResults:
+        ResultsSummary := F_FormatString2('%d Tests Passed, %d Tests Failed',
+                                          F_DINT(PassedTestsCount),
+                                          F_DINT(FailedTestsCount));
+
+        F_LogResult(Source  := 'Unit Test Runner',
+                    Message := F_FormatString2('%d Tests Passed, %d Tests Failed',
+                                               F_DINT(PassedTestsCount),
+                                               F_DINT(FailedTestsCount)));
+        State := sInit;
+
+END_CASE
+]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{35bbb33e-58f9-46f6-83b2-7eeb5a0d79dc}" />
+    <Method Name="AddTest" Id="{aff2d568-ab55-47bc-af2b-94e85ba5e218}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AddTest
+VAR_INPUT
+    UnitTest : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestList.AddTest(UnitTest);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{2a8822c9-331e-4c7a-a2ad-1d34d70c8b4d}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestList.Clear();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{78778059-eb1a-48b2-a0cc-e7bff17e395e}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Start
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[RunTests := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

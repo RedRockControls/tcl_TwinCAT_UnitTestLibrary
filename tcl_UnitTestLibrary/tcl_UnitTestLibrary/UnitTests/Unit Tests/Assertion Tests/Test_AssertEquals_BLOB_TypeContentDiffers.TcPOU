@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_BLOB_TypeContentDiffers" Id="{452cf4b4-9aad-4e8c-881a-b5f24778dfa9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_BLOB_TypeContentDiffers EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    
+    // Sizes are the same, but contents differ...
+    INT_Variable  : WORD := 123;
+    WORD_Variable : WORD := 124;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// Test the assertion...
+AssertionUnderTest.AssertEquals_BLOB(
+    Expected := INT_Variable,
+    Actual   := WORD_Variable,
+    VariableName := 'WORD_Variable');
+ 
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

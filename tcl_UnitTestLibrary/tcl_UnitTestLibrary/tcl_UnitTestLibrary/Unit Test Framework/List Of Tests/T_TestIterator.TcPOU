@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="T_TestIterator" Id="{9c7fc69c-fb4b-4541-ac61-da6e030935a5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_TestIterator
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    List  : I_ListOfTests;
+    Index : DINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="GetNext" Id="{d8e32e7b-74f2-45cb-92a5-36cd760c9fe0}">
+      <Declaration><![CDATA[METHOD GetNext : I_UnitTest
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF List <> 0 AND_THEN HasMore() THEN
+    GetNext := List.GetTest(Index);
+    Index   := Index + 1;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HasMore" Id="{c2cad75a-7d3b-49da-8860-f82c292983dd}">
+      <Declaration><![CDATA[METHOD HasMore : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[HasMore := List <> 0 AND_THEN (Index < List.Count and List.Count > 0);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Initialise" Id="{9c79c39c-cd0a-4d3d-b980-368b0a99c53f}">
+      <Declaration><![CDATA[METHOD Initialise : BOOL
+VAR_INPUT
+    List         : I_ListOfTests;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.List := List;
+Index      := 0;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

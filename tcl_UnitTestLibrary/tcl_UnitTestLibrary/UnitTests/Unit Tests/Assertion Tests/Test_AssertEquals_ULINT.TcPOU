@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_ULINT" Id="{6c9e4bf4-c186-42d8-ad44-93a3a79463ae}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_ULINT EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    ULINT_Variable : ULINT := 1111;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_ULINT(
+    Expected := 2222,
+    Actual   := ULINT_Variable,
+    VariableName := 'ULINT_Variable');
+   
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

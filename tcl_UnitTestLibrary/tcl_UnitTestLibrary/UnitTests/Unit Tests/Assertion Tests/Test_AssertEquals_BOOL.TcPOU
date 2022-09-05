@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_BOOL" Id="{0e8de748-6fee-46fc-8560-6947bf202f49}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_BOOL EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    BOOL_Variable : BOOL := FALSE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_BOOL(
+    Expected := TRUE,
+    Actual   := BOOL_Variable,
+    VariableName := 'BOOL_Variable');
+    
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

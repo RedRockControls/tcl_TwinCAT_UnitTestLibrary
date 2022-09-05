@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_ListCountIncrements" Id="{4ad9c475-8d0a-4735-8e26-f4b03d54a0ac}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_ListCountIncrements EXTENDS T_UnitTestBase
+VAR
+    List  : T_ListOfTests(Capacity := 10, TestGroupName := 'Unit Tests');
+    Test1 : T_UnitTestBase(List);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Assertion.AssertEquals_DINT(Expected     := 1,
+                            Actual       := List.Count,
+                            VariableName := 'List.Count');
+							
+CheckAssertion(NextState := 0);
+					]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

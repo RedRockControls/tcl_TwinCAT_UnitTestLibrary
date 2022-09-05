@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_GetTestReturnsCorrectTest" Id="{c9448291-0ac7-4baf-aa2f-b789133876a8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_GetTestReturnsCorrectTest EXTENDS T_UnitTestBase
+VAR
+	List : T_ListOfTests(Capacity := 10,TestGroupName := 'Unit Tests');
+	Test1 : T_UnitTestBase(List);
+	Test2 : T_UnitTestBase(List);
+	Test3 : T_UnitTestBase(List);
+	Test4 : T_UnitTestBase(List);
+	
+	Result : I_UnitTest;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Result := List.GetTest(2);
+
+
+Assertion.AssertEquals_STRING(Expected     := 'Test3',
+                            Actual       := Result.TestName,
+                            VariableName := 'Result.TestName');
+							
+CheckAssertion(NextState := 0);
+					]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

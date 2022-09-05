@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="F_Assert" Id="{3d3346b2-4427-4014-80db-924808734b9a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_Assert : BOOL
+VAR_INPUT
+    Source       : T_MaxString;
+    Expected     : ANY;
+    Actual       : ANY;
+    VariableName : T_MaxString;
+END_VAR
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF Expected.TypeClass <> Actual.TypeClass THEN
+    F_LogResult(Source := Source, Message := F_FormatStringEx1('Assertion failed on <%s> - TypeClass of expected and actual values differ',VariableName));
+    RETURN;
+
+ELSIF Expected.diSize <> Actual.diSize THEN
+    F_LogResult(Source := Source, Message := F_FormatStringEx1('Assertion failed on <%s> - Sizes of expected and actual values differ',VariableName));
+    RETURN;
+
+ELSIF MEMCMP(pBuf1 := Expected.pValue, pBuf2 := Actual.pValue, n := DINT_TO_UDINT(Actual.diSize)) <> 0 THEN
+    F_LogResult(Source := Source, Message := F_FormatStringEx1('Assertion failed on <%s> - Expected and actual values differ',VariableName));
+    RETURN;
+END_IF
+
+F_Assert := TRUE;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

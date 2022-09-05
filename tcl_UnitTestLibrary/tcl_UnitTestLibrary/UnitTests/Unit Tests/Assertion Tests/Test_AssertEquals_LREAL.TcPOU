@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_LREAL" Id="{b4c43a61-08cd-4fe8-b503-1f64bf7cdb15}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_LREAL EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    LREAL_Variable : LREAL := 1.111;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_LREAL(
+    Expected := 2.222,
+    Actual   := LREAL_Variable,
+    Delta    := 0.001,
+    VariableName := 'LREAL_Variable');
+   
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

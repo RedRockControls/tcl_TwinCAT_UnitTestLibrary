@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_STRING" Id="{db994c4a-d987-4378-af34-b707794fadd7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_STRING EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    STRING_Variable : STRING := 'Cucumber';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_STRING(
+    Expected := 'Radish',
+    Actual   := STRING_Variable,
+    VariableName := 'STRING_Variable'); 
+    
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

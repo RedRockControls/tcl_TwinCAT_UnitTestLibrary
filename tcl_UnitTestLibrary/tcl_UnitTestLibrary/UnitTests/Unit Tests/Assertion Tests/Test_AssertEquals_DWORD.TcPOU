@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_DWORD" Id="{74850fe4-9dcb-406d-ab1e-3b2dbbcb5237}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_DWORD EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    DWORD_Variable : DWORD := 1111;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_DWORD(
+    Expected := 2222, // deliberately different to test the assertion
+    Actual   := DWORD_Variable,
+    VariableName := 'DWORD_Variable');
+ 
+    
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

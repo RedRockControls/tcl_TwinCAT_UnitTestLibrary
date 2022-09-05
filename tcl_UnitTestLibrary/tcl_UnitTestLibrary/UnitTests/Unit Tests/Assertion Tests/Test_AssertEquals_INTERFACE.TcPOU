@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="Test_AssertEquals_INTERFACE" Id="{ab25b021-c79f-42a0-ac5d-cc8a5939f190}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_AssertEquals_INTERFACE EXTENDS T_UnitTestBase
+VAR
+    AssertionUnderTest : T_Assertion;
+    
+    ExampleInterfaceImplementation1   : T_ExampleInterfaceImplementation;
+    INTERFACE_Variable1 : I_ExampleInterface := ExampleInterfaceImplementation1;
+    
+    ExampleInterfaceImplementation2   : T_ExampleInterfaceImplementation;
+    INTERFACE_Variable2 : I_ExampleInterface := ExampleInterfaceImplementation2;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Test the assertion...
+AssertionUnderTest.AssertEquals_INTERFACE(
+    Expected := INTERFACE_Variable1,
+    Actual   := INTERFACE_Variable2,
+    VariableName := 'INTERFACE_Variable2'); 
+    
+// Assert that the assertion failed...
+Assertion.AssertEquals_BOOL(Expected     := TRUE,
+                            Actual       := AssertionUnderTest.AssertionFailed,
+                            VariableName := 'AssertionUnderTest.AssertionFailed');
+
+// Check the assertion worked...  
+CheckAssertion(NextState := 0);  
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
