@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="T_Child" Id="{6df6bf07-349f-4448-9f08-111fc027d888}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_Child
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_init" Id="{383e0f0b-8a7c-444e-acd0-ee93468104e7}">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode  : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    Counter      : I_Counter;
+    Qty          : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Counter.IncCounter(Qty);
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

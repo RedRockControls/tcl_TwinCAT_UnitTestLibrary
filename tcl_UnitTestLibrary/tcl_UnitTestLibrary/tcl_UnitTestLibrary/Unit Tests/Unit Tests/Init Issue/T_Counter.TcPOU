@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="T_Counter" Id="{47ef5f93-3a79-4e14-9e1b-33bf32085d66}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_Counter IMPLEMENTS I_Counter
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	count : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="IncCounter" Id="{35cba5ef-04ae-4a72-888d-7ddff25bc476}">
+      <Declaration><![CDATA[METHOD IncCounter
+VAR_INPUT
+	Qty : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[count := count + Qty;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{fe60da19-198a-4c4d-b542-c2433432bf80}">
+      <Declaration><![CDATA[METHOD Reset
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[count := 0;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="StringSplitter" Id="{b53915d5-2fb5-0d4a-0dc6-2e8585d01cd6}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'hide'}
+FUNCTION_BLOCK INTERNAL StringSplitter
+VAR
+	SubjectString : TC2_SYSTEM.T_MaxString;
+	Delimiter : STRING;
+	Delimiter1 : STRING;
+	Delimiter2 : STRING;
+	NextDelimiterPosition : INT;
+	NextDelimiter1Position : INT;
+	NextDelimiter2Position : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="GetNext" Id="{0cde1e29-3cbf-0b82-0fba-b3b63682cb30}">
+      <Declaration><![CDATA[METHOD GetNext : STRING(255)
+VAR_INPUT
+END_VAR
+VAR
+	RemainingLength: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[NextDelimiter1Position := FIND(SubjectString , Delimiter1);
+NextDelimiter2Position := FIND(SubjectString , Delimiter2);
+
+IF NextDelimiter1Position = 0 THEN
+    // use Delimiter 2 position , even if zero...
+    NextDelimiterPosition := NextDelimiter2Position;
+    Delimiter := Delimiter2;
+    
+ELSIF NextDelimiter2Position = 0 THEN
+    // use Delimiter 1 position , non-zero...
+    NextDelimiterPosition := NextDelimiter1Position;
+    Delimiter := Delimiter1;
+
+ELSE
+    // Both delimters found - use the one nearest the start of the string...
+    IF NextDelimiter1Position < NextDelimiter2Position THEN
+        NextDelimiterPosition := NextDelimiter1Position;
+        Delimiter := Delimiter1;
+    ELSE
+        NextDelimiterPosition := NextDelimiter2Position;
+        Delimiter := Delimiter2;
+	END_IF
+END_IF
+
+IF NextDelimiterPosition > 0 THEN // delimitter found
+    
+    // extract next sub-string
+	GetNext := LEFT(SubjectString,NextDelimiterPosition - 1);
+    
+    // remove sub-string from subject string
+	RemainingLength := LEN(SubjectString) - NextDelimiterPosition - LEN(Delimiter) + 1;
+	SubjectString := RIGHT(SubjectString,RemainingLength);
+    
+//    // strip any delimitters from front of remaining string
+//    WHILE FIND(SubjectString,Delimiter1) = 1 DO
+//        SubjectString := RIGHT(SubjectString,LEN(SubjectString) - LEN(Delimiter1));
+//	END_WHILE
+//    WHILE FIND(SubjectString,Delimiter2) = 1 DO
+//        SubjectString := RIGHT(SubjectString,LEN(SubjectString) - LEN(Delimiter2));
+//	END_WHILE
+ELSE
+	GetNext := SubjectString; // return what is left
+	SubjectString := '';
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetRemainder" Id="{891b952a-172a-04b2-0801-d2d1c4529aed}">
+      <Declaration><![CDATA[METHOD GetRemainder : STRING(255)
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetRemainder := SubjectString; // return what is left
+SubjectString := '';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HasMore" Id="{673b7094-8357-4c12-b730-459ed0d985d1}">
+      <Declaration><![CDATA[METHOD HasMore : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[HasMore := SubjectString <> '';
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{31eca5c2-0cb7-0a34-1b02-00e474b1f20a}">
+      <Declaration><![CDATA[METHOD Init
+VAR_INPUT
+		Str : TC2_SYSTEM.T_MaxString;
+		Delim1 : STRING;
+		Delim2 : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[SubjectString := Str;
+NextDelimiterPosition := 0;
+Delimiter1 := Delim1;
+Delimiter2 := Delim2;
+]]></ST>
+      </Implementation>
+    </Method>
+    <ObjectProperties>
+      <XmlArchive>
+        <Data>
+          <o xml:space="preserve" t="POUImageProperty">
+            <n n="ImageData" />
+            <v n="TransparencyColor">"White"</v>
+            <v n="MakeTransparent">false</v>
+          </o>
+        </Data>
+        <TypeList>
+          <Type n="Boolean">System.Boolean</Type>
+          <Type n="POUImageProperty">{bb741845-1ec5-4be9-bb0d-2cf7058af574}</Type>
+          <Type n="String">System.String</Type>
+        </TypeList>
+      </XmlArchive>
+    </ObjectProperties>
+  </POU>
+</TcPlcObject>

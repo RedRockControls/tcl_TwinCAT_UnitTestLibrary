@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Test_GetTestHandlesEmptyList" Id="{0377225d-b398-4c13-bbd5-f5d116644514}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_GetTestHandlesEmptyList EXTENDS T_UnitTestBase IMPLEMENTS I_UnitTest
+VAR
+    List : T_ListOfTests(Capacity := 10);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{f5a8aaee-52fb-4db1-98b0-740d059321f3}">
+      <Declaration><![CDATA[METHOD Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[List.Clear();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{802d01d7-60ac-48d7-8d7d-466811593832}">
+      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{40f0d1ad-b228-48a7-9c64-f0c23f3a1507}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RunTest" Id="{c6dfbf80-c24b-481a-868f-5d5f6bcb529b}">
+      <Declaration><![CDATA[METHOD RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+VAR_INST
+    TestNumber2 : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestNumber2 := List.GetTest(2);
+
+AssertTrue(Source    := TestName,
+             Condition := (TestNumber2 = 0),
+             Message   := 'Interface pointer TestNumber2 was not zero',
+             Failed    => TestFailed);
+
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

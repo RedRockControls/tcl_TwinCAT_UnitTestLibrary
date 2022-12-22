@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Test_F_AssertAny_INTS_Differ" Id="{84efddba-5fae-41db-9255-bfe641290d43}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_F_AssertAny_INTS_Differ EXTENDS T_UnitTestBase
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{0906e0bf-21d0-4331-9bda-44033c058ec6}">
+      <Declaration><![CDATA[METHOD Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RunTest" Id="{5201941c-166a-4ae6-a43b-c98fa8f93239}">
+      <Declaration><![CDATA[METHOD RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+VAR
+    TestValue : INT;
+    Actual    : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestValue := 133;
+Actual    := 133;
+
+AssertEquals(Source   := THIS^.TestName,
+             Expected := TestValue,
+             Actual   := Actual,
+             Message  := 'Unexpected value of TestValue',
+             Failed   => TestFailed);
+
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

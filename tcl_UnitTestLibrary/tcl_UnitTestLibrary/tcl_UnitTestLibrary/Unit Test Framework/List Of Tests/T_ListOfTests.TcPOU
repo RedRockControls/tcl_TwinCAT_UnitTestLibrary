@@ -3,14 +3,12 @@
   <POU Name="T_ListOfTests" Id="{1fcff8f0-b8c4-4bed-b839-fdb26fdb9776}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK T_ListOfTests IMPLEMENTS I_ListOfTests
 VAR
-    _TestGroupName       : T_MaxString;
-    Buffer               : FB_DynMem_Buffer(ipMemMan := DynamicMemoryManager);
+    {attribute 'analysis' := '-33'} // inhibit unused variable warning
     DynamicMemoryManager : FB_DynMem_Manager;
+    Buffer               : FB_DynMem_Buffer(ipMemMan := DynamicMemoryManager);
     pTest                : POINTER TO I_UnitTest;
     _Count               : DINT;
     Capacity             : DINT;
-	
-	FindTestResult : DINT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -34,8 +32,14 @@ END_VAR
     pTest := Buffer.pBuffer;
 END_IF
 
-pTest[_Count] := Test;
-_Count        := _Count + 1;
+AssertTrue(Source    := 'T_ListOfTests.AddTest()',
+             Condition := pTest > 0,
+             Message   := 'Buffer not initialised');
+
+IF pTest <> 0 THEN			 
+	pTest[_Count] := Test;
+	_Count        := _Count + 1;
+END_IF
 ]]></ST>
       </Implementation>
     </Method>
@@ -45,7 +49,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Buffer.Clear();
+        <ST><![CDATA[IF pTest = 0 THEN
+    // Buffer was not allocated during Fb_init. Try again...
+    Buffer.CreateBuffer(nSize  := DINT_TO_UDINT(Capacity) * SIZEOF(PVOID),
+                        bReset := TRUE);
+END_IF
+
+Buffer.Clear();
 _Count := 0;
 ]]></ST>
       </Implementation>
@@ -80,41 +90,19 @@ END_IF
     <Method Name="FB_init" Id="{c7aec280-ba2a-4496-90e8-87d0d03568b6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
-    bInitRetains  : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-    bInCopyCode   : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
-    Capacity      : DINT;
+    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode  : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    Capacity     : DINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[Buffer.CreateBuffer(nSize  := DINT_TO_UDINT(Capacity) * SIZEOF(PVOID),
                     bReset := TRUE);
 
-pTest                := Buffer.pBuffer;
-THIS^.Capacity       := Capacity;
+pTest := Buffer.pBuffer;
+
+THIS^.Capacity := Capacity;
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="FindTestIndex" Id="{c5dc6a3b-8a7a-4a25-92be-41b08efa463c}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FindTestIndex : DINT
-VAR_INPUT
-	Test : I_UnitTest;
-END_VAR
-VAR
-	NextTest : I_UnitTest;
-	i : DINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[FOR i := 0 TO _Count - 1 DO
-	NextTest := GetTest(i);
-	IF NextTest = Test THEN
-		FindTestIndex := i;
-		FindTestResult := i;
-		RETURN;
-	END_IF
-END_FOR
-FindTestIndex := -1;
-FindTestResult := -1;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetTest" Id="{da1f2a72-8905-472e-8ebd-a6a8733af20d}" FolderPath="Methods\">
@@ -130,30 +118,5 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SetTest" Id="{96992a06-c0d6-44ff-b39e-3d723578e002}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD SetTest : I_UnitTest
-VAR_INPUT
-    Test : I_UnitTest;
-    Index : DINT;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF Index < _Count AND Index >= 0 THEN
-    pTest[Index] := Test;
-END_IF
-]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="TestGroupName" Id="{4b9efce6-42f7-4162-bc4f-a10e5278f21e}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TestGroupName : T_MaxString]]></Declaration>
-      <Get Name="Get" Id="{4f62105e-7399-4c9f-8ccd-8a4f527231a8}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TestGroupName := _TestGroupName;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
   </POU>
 </TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="TestSuite_AssertTests" Id="{79ad6bd5-b125-43a8-80f3-d60ad2c36432}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
+FUNCTION_BLOCK TestSuite_AssertTests
+VAR
+    TestRunner                : T_TestRunner;
+    Test_F_Assert_INTS_Differ : Test_F_AssertAny_INTS_Differ(TestRunner);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[TestRunner(TestSuiteName := 'TestSuite_AssertTests');
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

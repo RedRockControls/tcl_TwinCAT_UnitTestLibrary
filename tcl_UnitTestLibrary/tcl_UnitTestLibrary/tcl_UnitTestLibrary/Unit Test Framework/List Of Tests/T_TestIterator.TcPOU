@@ -33,13 +33,14 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[HasMore := List <> 0 AND_THEN (Index < List.Count and List.Count > 0);]]></ST>
+        <ST><![CDATA[HasMore := List <> 0 AND_THEN (Index < List.Count and List.Count > 0);
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Initialise" Id="{9c79c39c-cd0a-4d3d-b980-368b0a99c53f}">
       <Declaration><![CDATA[METHOD Initialise : BOOL
 VAR_INPUT
-    List         : I_ListOfTests;
+    List : I_ListOfTests;
 END_VAR
 ]]></Declaration>
       <Implementation>

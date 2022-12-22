@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-{attribute 'hide_all_locals'}
 FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
 VAR_INPUT
 END_VAR
@@ -11,52 +10,74 @@ END_VAR
 VAR
     {attribute 'instance-path'}
     {attribute 'no_init'}
-    _InstanceName  : T_MaxString; // Automatically initialised with the full name of the instance
-    _TestGroupName : T_MaxString;
-    _TestName      : T_MaxString;
-    _TestResult    : ST_TestResult;
-
-    State : INT;        // for general use during test...
+    InstanceName : T_MaxString; // Automatically initialised with the full name of the instance
+    TestName     : T_MaxString;
+    TestRunner   : I_TestRunner;
+	
+	Status : STRING;
+	
+	Bob : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Folder Name="Methods" Id="{a5772276-00c5-43a4-85c1-e780c7c7de3b}" />
-    <Folder Name="Properties" Id="{cf4c8886-f7c0-491b-97e7-1d98af408b9d}" />
-    <Method Name="FB_init_Old" Id="{d80ab3c1-8238-4897-a324-064f979df65c}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FB_init_Old : BOOL
+    <Folder Name="Properties" Id="{eb7e9c1f-ae66-405a-820c-688b53e1a9a9}" />
+    <Method Name="FB_init" Id="{d80ab3c1-8238-4897-a324-064f979df65c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
     bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
     bInCopyCode  : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
-	ListOfTests : I_ListOfTests;
+    TestRunner   : I_TestRunner;
 END_VAR
 VAR
-	Index : DINT;
-END_VAR]]></Declaration>
+    StringSplitter : StringSplitter;
+END_VAR
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[THIS^.SetTestName();
-IF ListOfTests <> 0 THEN
-    THIS^._TestGroupName := ListOfTests.TestGroupName;
-	
-	IF NOT bInCopyCode THEN //not online change
-        ListOfTests.AddTest(Test := THIS^);
-	END_IF
-	
+        <ST><![CDATA[StringSplitter.Init(Str    := InstanceName,
+                    Delim1 := '.',
+                    Delim2 := '');
+
+WHILE StringSplitter.HasMore() DO
+    TestName := StringSplitter.GetNext(); // to get last sub-section
+END_WHILE
+
+IF TestRunner <> 0 THEN
+	THIS^.TestRunner := TestRunner;
+	TestRunner.AddTest(THIS^);
+	Status := 'TestAdded';
+ELSE
+	Status := 'TestRunner was zero';
 END_IF
 
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ABSTRACT Init : BOOL
+      <Declaration><![CDATA[METHOD ABSTRACT Init
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Name" Id="{0404f2a6-6d2f-43ce-8288-d9af3f97471a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Name : T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{23ff53f7-40cf-4dbc-ae96-089bca3dca34}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Name := TestName;
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="RunTest" Id="{c72e0459-07ad-41cb-aa90-04d972433a01}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ABSTRACT RunTest
+      <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
+METHOD ABSTRACT RunTest
 VAR_OUTPUT
     TestCompleted : BOOL;
     TestFailed    : BOOL;
@@ -66,44 +87,5 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="SetTestName" Id="{fec2f039-d20a-446b-ab3c-1706e19fed00}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD PRIVATE SetTestName
-VAR
-    StringSplitter : T_StringSplitter;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[StringSplitter.Init(Str    := _InstanceName,
-                    Delim1 := '.',
-                    Delim2 := '');
-
-WHILE StringSplitter.HasMore() DO
-    _TestName := StringSplitter.GetNext(); // to get last sub-section
-END_WHILE
-]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="TestGroupName" Id="{c0734a91-06c9-4bba-9974-fce0352497fe}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TestGroupName : T_MaxString]]></Declaration>
-      <Get Name="Get" Id="{2632a7f3-75c8-46fa-8f35-218adcbfd7e0}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TestGroupName := _TestGroupName;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
-    <Property Name="TestName" Id="{f9a8d796-e7c0-4e0e-b480-623bde7cf007}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TestName : T_MaxString]]></Declaration>
-      <Get Name="Get" Id="{5c260f7d-f86b-4720-b938-f9b5de900764}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TestName := _TestName;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
   </POU>
 </TcPlcObject>

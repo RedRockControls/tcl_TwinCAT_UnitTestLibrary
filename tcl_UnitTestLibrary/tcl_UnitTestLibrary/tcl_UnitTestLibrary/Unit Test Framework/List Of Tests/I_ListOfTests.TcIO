@@ -17,13 +17,6 @@ END_VAR
         <Declaration><![CDATA[]]></Declaration>
       </Get>
     </Property>
-    <Method Name="FindTestIndex" Id="{ef55a53b-f2a4-443d-a008-5ccaec33d191}">
-      <Declaration><![CDATA[METHOD FindTestIndex : DINT
-VAR_INPUT
-	Test : I_UnitTest;
-END_VAR
-]]></Declaration>
-    </Method>
     <Method Name="GetTest" Id="{bc5e0acc-0aa8-4117-b203-55864887c248}">
       <Declaration><![CDATA[METHOD GetTest : I_UnitTest
 VAR_INPUT
@@ -31,19 +24,5 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
     </Method>
-    <Method Name="SetTest" Id="{f50ad0a9-50fa-4169-af3d-919c413751b1}">
-      <Declaration><![CDATA[METHOD SetTest : I_UnitTest
-VAR_INPUT
-    Test : I_UnitTest;
-    Index : DINT;
-END_VAR
-]]></Declaration>
-    </Method>
-    <Property Name="TestGroupName" Id="{64854b96-8b20-4b92-aaa4-265f6f43b2cd}">
-      <Declaration><![CDATA[PROPERTY TestGroupName : T_MaxString]]></Declaration>
-      <Get Name="Get" Id="{36f61fd4-09fe-4755-a67d-d4ee53f9e0c3}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
   </Itf>
 </TcPlcObject>

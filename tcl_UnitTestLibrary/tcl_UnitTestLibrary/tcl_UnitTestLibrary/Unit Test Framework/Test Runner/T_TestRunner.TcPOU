@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_TestRunner" Id="{c7f35beb-7079-466d-ae1a-1beb011dea9f}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner
+    <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner IMPLEMENTS I_TestRunner
+VAR_INPUT
+	TestSuiteName : T_MaxString := 'TestSuite';
+    Verbose : BOOL;
+END_VAR
 VAR
     State : (
         sInit,
@@ -9,14 +13,14 @@ VAR
         sRunTest,
         sCheckResults
     );
-    ResultsSummary          : T_MaxString;
-    PassedTestsCount        : DINT;
-    FailedTestsCount        : DINT;
-    TestList                : T_ListOfTests(Capacity := 50);
-    TestIterator            : T_TestIterator;
-    CurrentTest             : I_UnitTest;
+    ResultsSummary   : T_MaxString;
+    PassedTestsCount : DINT;
+    FailedTestsCount : DINT;
+    TestList         : T_ListOfTests(Capacity := 50);
+    TestIterator     : T_TestIterator;
+    CurrentTest      : I_UnitTest;
 
-	RunTests : BOOL;
+    RunTests      : BOOL := TRUE;
     TestFailed    : BOOL;
     TestCompleted : BOOL;
 END_VAR
@@ -30,6 +34,7 @@ END_VAR
             ResultsSummary   := '';
             FailedTestsCount := 0;
             PassedTestsCount := 0;
+            F_LogResult(Source := TestSuiteName, Message := 'Starting Tests');
             State            := sGetTest;
         END_IF
 
@@ -50,19 +55,23 @@ END_VAR
         IF TestCompleted THEN
             IF TestFailed THEN
                 FailedTestsCount := FailedTestsCount + 1;
+                F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Test failed <%s>', CurrentTest.Name));
             ELSE
                 PassedTestsCount := PassedTestsCount + 1;
+                IF Verbose THEN
+                    F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Test passed <%s>', CurrentTest.Name));
+                END_IF
             END_IF
             State := sGetTest;
         END_IF
 
     sCheckResults:
-        ResultsSummary := F_FormatString2('%d Tests Passed, %d Tests Failed',
+        ResultsSummary := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
                                           F_DINT(PassedTestsCount),
                                           F_DINT(FailedTestsCount));
 
-        F_LogResult(Source  := 'Unit Test Runner',
-                    Message := F_FormatString2('%d Tests Passed, %d Tests Failed',
+        F_LogResult(Source  := TestSuiteName,
+                    Message := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
                                                F_DINT(PassedTestsCount),
                                                F_DINT(FailedTestsCount)));
         State := sInit;
@@ -78,11 +87,12 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TestList.AddTest(UnitTest);]]></ST>
+        <ST><![CDATA[TestList.AddTest(UnitTest);
+]]></ST>
       </Implementation>
     </Method>
-    <Method Name="Init" Id="{2a8822c9-331e-4c7a-a2ad-1d34d70c8b4d}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Init
+    <Method Name="ClearTests" Id="{9c636768-dc92-4c10-a951-416ca0c5943a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ClearTests
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -91,12 +101,14 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="Start" Id="{78778059-eb1a-48b2-a0cc-e7bff17e395e}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Start
+      <Declaration><![CDATA[{attribute 'call_after_online_change_slot' := '200'}
+METHOD Start
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[RunTests := TRUE;]]></ST>
+        <ST><![CDATA[RunTests := TRUE;
+]]></ST>
       </Implementation>
     </Method>
   </POU>

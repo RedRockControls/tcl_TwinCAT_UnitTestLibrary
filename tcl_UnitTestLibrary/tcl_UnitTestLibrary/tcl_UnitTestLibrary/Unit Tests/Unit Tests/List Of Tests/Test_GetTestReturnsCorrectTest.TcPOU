@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Test_GetTestReturnsCorrectTest" Id="{426c01fc-9025-4bdf-b710-1c9fa2ea6f5f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_GetTestReturnsCorrectTest EXTENDS T_UnitTestBase
+VAR
+    List  : T_ListOfTests(Capacity := 10);
+    Test0 : Test_ExampleTest(0);
+    Test1 : Test_ExampleTest(0);
+    Test2 : Test_ExampleTest(0);
+    Test3 : Test_ExampleTest(0);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{c9fa5a59-5cb5-4d48-81c3-0d38228b2f7d}">
+      <Declaration><![CDATA[METHOD Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[List.Clear();
+
+List.AddTest(Test0);
+List.AddTest(Test1);
+List.AddTest(Test2);
+List.AddTest(Test3);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{43042f1b-6108-4a8e-8ad5-96cf5a1525ec}">
+      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{209b7ed4-ea4d-4470-88b1-168e0044e42f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RunTest" Id="{3edd45f6-0321-4408-83bc-ccbc93056a5f}">
+      <Declaration><![CDATA[METHOD RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+VAR_INST
+    Test2_InterfacePointer : I_UnitTest;
+    ReturnValue            : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Test2_InterfacePointer := Test2;
+ReturnValue            := List.GetTest(2);
+
+AssertEquals(Source   := TestName,
+               Expected := Test2_InterfacePointer,
+               Actual   := ReturnValue,
+               Message  := 'Interface pointer TestNumber2 was not correct',
+               Failed   => TestFailed);
+
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

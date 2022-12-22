@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Test_IteratorReturnsTests" Id="{85ba2117-52d5-4804-a1bf-0980042b7edf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_IteratorReturnsTests EXTENDS T_UnitTestBase
+VAR
+    List     : T_ListOfTests(Capacity := 10);
+    Iterator : T_TestIterator;
+    Test0 : Test_ExampleTest(0);
+    Test1 : Test_ExampleTest(0);
+    Test2 : Test_ExampleTest(0);
+    Test3 : Test_ExampleTest(0);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{f5cf7b1f-1614-4f76-ad11-f946fcc59d0a}">
+      <Declaration><![CDATA[METHOD Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[List.Clear();
+
+List.AddTest(Test0);
+List.AddTest(Test1);
+List.AddTest(Test2);
+List.AddTest(Test3);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{61ffc133-d5b1-40ed-ba9f-c11825891419}">
+      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{80eafa1c-22c1-4ceb-8368-382c827b6458}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RunTest" Id="{ad0316aa-803b-48e0-9d3d-7922c261ce32}">
+      <Declaration><![CDATA[METHOD RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+VAR_INST
+    Test2_InterfacePointer : I_UnitTest;
+    ReturnValue            : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Iterator.Initialise(List);
+Iterator.GetNext();
+Iterator.GetNext();
+
+Test2_InterfacePointer := Test2;
+ReturnValue            := Iterator.GetNext();
+
+AssertEquals(Source   := TestName,
+               Expected := Test2_InterfacePointer,
+               Actual   := ReturnValue,
+               Message  := 'Interface pointer TestNumber2 was not correct',
+               Failed   => TestFailed);
+
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

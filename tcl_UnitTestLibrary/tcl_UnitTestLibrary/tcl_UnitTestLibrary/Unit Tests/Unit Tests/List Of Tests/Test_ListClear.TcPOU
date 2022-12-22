@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Test_ListClear" Id="{99e29a87-ac8b-4ed1-8471-2846d4f2813c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK Test_ListClear EXTENDS T_UnitTestBase
+VAR
+    List  : T_ListOfTests(Capacity := 10);
+    Test0 : Test_ExampleTest(0);
+    Test1 : Test_ExampleTest(0);
+    Test2 : Test_ExampleTest(0);
+    Test3 : Test_ExampleTest(0);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{8a021792-fedf-418c-9fa3-308d88b77576}">
+      <Declaration><![CDATA[METHOD Init
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[List.Clear();
+List.AddTest(Test0);
+List.AddTest(Test1);
+List.AddTest(Test2);
+List.AddTest(Test3);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Name" Id="{59287634-b047-4629-8715-4d6e21921b2e}">
+      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{aad3ea16-4359-49e7-91e4-4b8ada5bc3ee}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="RunTest" Id="{4404b0c7-fb1a-449c-948d-c29a698c43db}">
+      <Declaration><![CDATA[METHOD RunTest
+VAR_OUTPUT
+    TestCompleted : BOOL;
+    TestFailed    : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AssertTrue(Source    := TestName,
+             Condition := List.Count = 4,
+             Message   := 'List.Count was not 4',
+             Failed    => TestFailed);
+			 
+List.Clear();			 
+
+AssertTrue(Source    := TestName,
+             Condition := List.Count = 0,
+             Message   := 'List.Count was not 0',
+             Failed    => TestFailed);
+
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

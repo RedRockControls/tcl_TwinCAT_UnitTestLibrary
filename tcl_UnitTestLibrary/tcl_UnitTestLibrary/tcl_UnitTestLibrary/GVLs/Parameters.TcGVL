@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
-  <GVL Name="Parameters" Id="{5ac96168-fae9-4200-ac5c-82709ff5d76a}" ParameterList="True">
-    <Declaration><![CDATA[VAR_GLOBAL CONSTANT
-    MAX_TESTS : DINT := 200;
-END_VAR]]></Declaration>
-  </GVL>
-</TcPlcObject>

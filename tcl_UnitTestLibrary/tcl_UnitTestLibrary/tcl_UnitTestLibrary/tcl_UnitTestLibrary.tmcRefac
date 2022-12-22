@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Refactors>
+  <Renames>
+    <RenamedType>
+      <Type guid="79ad6bd5-b125-43a8-80f3-d60ad2c36432">T_TESTSUITE_ASSERTTESTS</Type>
+      <From>T_TestSuite_AssertTests</From>
+      <To>TestSuite_AssertTests</To>
+    </RenamedType>
+    <RenamedType>
+      <Type guid="37b58022-812c-4470-9e56-2fe2415dcfd2">T_TESTSUITE_LISTOFTESTS</Type>
+      <From>T_TestSuite_ListOfTests</From>
+      <To>TestSuite_ListOfTests</To>
+    </RenamedType>
+  </Renames>
+</Refactors>

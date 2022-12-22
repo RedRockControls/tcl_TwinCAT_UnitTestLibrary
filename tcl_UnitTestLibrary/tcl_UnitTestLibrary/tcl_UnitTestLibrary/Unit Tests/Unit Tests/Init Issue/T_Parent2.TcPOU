@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="T_Parent2" Id="{0fbf7d87-6f93-4120-a759-094925074078}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_Parent2 
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR_STAT
+	Counter : T_Counter;
+END_VAR
+VAR
+
+    Child1 : T_Child(Counter, 100);
+    Child2 : T_Child(Counter, 200);
+    Child3 : T_Child(Counter, 300);
+//    Child4 : T_Child(Counter, 1);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="FB_exit" Id="{f1b618ba-9a8a-4909-9fca-bb0bb8b727dd}">
+      <Declaration><![CDATA[METHOD FB_exit : BOOL
+VAR_INPUT
+	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Counter.Reset();]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>
