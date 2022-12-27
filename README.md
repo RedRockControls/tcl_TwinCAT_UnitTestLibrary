@@ -10,7 +10,7 @@ TwinCAT_UnitTestLibrary is a lightweight unit test library for testing TwinCAT3 
 
 2. Runnable Test Suites can be defined containing related tests. 
 
-	A test suite contains a test runner to form a self contained, runnable class. This allows the tests defines in a library to be run either in the library during development, or in the client project during application development. This allows the library to be tested against the  library versions and hardware platform to be used in the application.
+	A test suite contains a test runner to form a self contained, runnable class. This allows the tests defines in a library to be run either in the library during development, or in the client project during application development. This enables the tests to be run against the library versions and hardware platform to be used in the application.
 
 3. Tests are run automatically on online-change to provide fast feedback during test-driven development.
 
