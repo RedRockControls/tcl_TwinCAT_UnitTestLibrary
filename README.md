@@ -17,10 +17,12 @@ TwinCAT_UnitTestLibrary is a lightweight unit test library for testing TwinCAT3 
 
 
 To create a test:
-* Inherit from a base class
-* Create an instance in a test suite
+* Create a unit test function block that inherits from T_UnitTestBase
+* Create a test suite function block that will contain the test(s) and test runner
+* Add an instance ot T_TestRunner to the test suite
+* Add an instance of the unit test function block to the test suite
+* Call TestRunner() in the body of the test suite
 * Execute the test suite somewhere
-* Results are posted in the error window of Visual Studio
 
 The library contains unit tests that can be used as examples of how to use the library.
 
