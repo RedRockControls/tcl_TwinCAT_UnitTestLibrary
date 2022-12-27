@@ -1,0 +1,12 @@
+﻿**/_Boot
+
+**/3s - smart software solutions gmbh
+**/beckhoff automation gmbh
+**/caa technical workgroup
+**/intern
+**/system
+*.suo
+*.~u
+*.bak
+_CompileInfo/
+LineIDs.dbg
