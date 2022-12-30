@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
+FUNCTION_BLOCK T_UnitTestBase IMPLEMENTS I_UnitTest
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -13,10 +13,6 @@ VAR
     InstanceName : T_MaxString; // Automatically initialised with the full name of the instance
     TestName     : T_MaxString;
     TestRunner   : I_TestRunner;
-	
-	Status : STRING;
-	
-	Bob : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -47,16 +43,13 @@ END_WHILE
 IF TestRunner <> 0 THEN
 	THIS^.TestRunner := TestRunner;
 	TestRunner.AddTest(THIS^);
-	Status := 'TestAdded';
-ELSE
-	Status := 'TestRunner was zero';
 END_IF
 
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ABSTRACT Init
+      <Declaration><![CDATA[METHOD Init
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
@@ -77,7 +70,7 @@ END_VAR
     </Property>
     <Method Name="RunTest" Id="{c72e0459-07ad-41cb-aa90-04d972433a01}" FolderPath="Methods\">
       <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
-METHOD ABSTRACT RunTest
+METHOD RunTest
 VAR_OUTPUT
     TestCompleted : BOOL;
     TestFailed    : BOOL;
