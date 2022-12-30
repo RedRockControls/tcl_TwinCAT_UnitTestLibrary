@@ -2,9 +2,13 @@
 
 # TwinCAT_UnitTestLibrary
 
-TwinCAT_UnitTestLibrary is a lightweight unit test library for testing TwinCAT3 source code with the following goals:
+TwinCAT_UnitTestLibrary is a lightweight unit test library for testing TwinCAT3 source code
+See [A TwinCAT Unit Test Library](https://www.redrockcontrols.co.uk/?p=809)
 
-1. Impose minimum setup cost for a new test.
+
+ It has been written with the following goals in mind:
+
+1. Minimum setup cost for a new test.
 
 	A test is defined in a function block that implements I_UnitTestBase. This interface defines a method called RunTest which returns TestCompleted and TestFailed booleans. A base class T_UnitTestBase is provided to allow a test to be defined by extending it. Assert functions are used to determine the correctness of the test, and to output messages to the error window should they fail
 
@@ -26,4 +30,4 @@ To create a test:
 
 The library contains unit tests that can be used as examples of how to use the library.
 
-NOTE: Due to restrictions on what can be executed in the FB_Init method by the AuxPlc task, when tests are added to a test suite, online change is not possible so the code must be re-downloaded to the runtime. 
+NOTE: Due to an apparent bug in how nested function blocks are initialised, when tests are added to a test suite, online change is not possible so the code must be re-downloaded to the runtime. 
