@@ -19,18 +19,6 @@ List.AddTest(Test0);
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Name" Id="{858ee560-cf3a-47ad-b884-c43db2b5972f}">
-      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
-]]></Declaration>
-      <Get Name="Get" Id="{3acaea0e-ff92-44c8-a318-3a5011db6acf}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="RunTest" Id="{7d69c6e7-5ecd-40f0-afb8-6c5dace0a11b}">
       <Declaration><![CDATA[METHOD RunTest
 VAR_OUTPUT

@@ -4,12 +4,13 @@
     <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
 FUNCTION_BLOCK TestSuite_AssertTests
 VAR
-    TestRunner                : T_TestRunner;
-    Test_F_Assert_INTS_Differ : Test_F_AssertAny_INTS_Differ(TestRunner);
+    TestRunner                               : T_TestRunner(TestSuiteName := 'TestSuite_AssertTests', Verbose := FALSE);
+    Test_AssertEqualsDetects_INTS_ThatDiffer : Test_AssertEqualsDetects_INTS_ThatDiffer(TestRunner);
+    Test_AssertEquals_STRING                 : Test_AssertEquals_STRING(TestRunner);
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[TestRunner(TestSuiteName := 'TestSuite_AssertTests');
+      <ST><![CDATA[TestRunner.CyclicUpdate();
 ]]></ST>
     </Implementation>
   </POU>

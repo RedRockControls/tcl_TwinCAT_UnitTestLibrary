@@ -17,18 +17,6 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="Name" Id="{4a77067e-3885-4fc4-8152-205388f90c47}">
-      <Declaration><![CDATA[PROPERTY Name : Tc2_System.T_MaxString
-]]></Declaration>
-      <Get Name="Get" Id="{278475f0-5263-4538-82fd-fa1afe6878db}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="RunTest" Id="{196a1154-4f83-4db1-bc9d-8909993894ea}">
       <Declaration><![CDATA[METHOD RunTest
 VAR_OUTPUT

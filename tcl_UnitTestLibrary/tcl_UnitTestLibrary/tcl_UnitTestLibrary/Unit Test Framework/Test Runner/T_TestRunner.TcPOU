@@ -2,10 +2,6 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_TestRunner" Id="{c7f35beb-7079-466d-ae1a-1beb011dea9f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner IMPLEMENTS I_TestRunner
-VAR_INPUT
-	TestSuiteName : T_MaxString := 'TestSuite';
-    Verbose : BOOL;
-END_VAR
 VAR
     State : (
         sInit,
@@ -13,6 +9,8 @@ VAR
         sRunTest,
         sCheckResults
     );
+    TestSuiteName    : T_MaxString := 'TestSuite';
+    Verbose          : BOOL;
     ResultsSummary   : T_MaxString;
     PassedTestsCount : DINT;
     FailedTestsCount : DINT;
@@ -26,7 +24,34 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[CASE State OF
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Methods" Id="{35bbb33e-58f9-46f6-83b2-7eeb5a0d79dc}" />
+    <Method Name="AddTest" Id="{aff2d568-ab55-47bc-af2b-94e85ba5e218}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AddTest
+VAR_INPUT
+    UnitTest : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestList.AddTest(UnitTest);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearTests" Id="{9c636768-dc92-4c10-a951-416ca0c5943a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ClearTests
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TestList.Clear();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicUpdate" Id="{5c3a5d41-6805-496d-ba38-305df4534527}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD CyclicUpdate
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE State OF
     sInit:
         IF RunTests THEN
             RunTests := FALSE;
@@ -78,26 +103,21 @@ END_VAR
 
 END_CASE
 ]]></ST>
-    </Implementation>
-    <Folder Name="Methods" Id="{35bbb33e-58f9-46f6-83b2-7eeb5a0d79dc}" />
-    <Method Name="AddTest" Id="{aff2d568-ab55-47bc-af2b-94e85ba5e218}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AddTest
-VAR_INPUT
-    UnitTest : I_UnitTest;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TestList.AddTest(UnitTest);
-]]></ST>
       </Implementation>
     </Method>
-    <Method Name="ClearTests" Id="{9c636768-dc92-4c10-a951-416ca0c5943a}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ClearTests
+    <Method Name="FB_init" Id="{4d8559a3-1b79-40c6-ae87-d14857fb3a8a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
+    bInitRetains  : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode   : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    TestSuiteName : T_MaxString := 'TestSuite';
+    Verbose       : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TestList.Clear();]]></ST>
+        <ST><![CDATA[THIS^.TestSuiteName := TestSuiteName;
+THIS^.Verbose       := Verbose;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Start" Id="{78778059-eb1a-48b2-a0cc-e7bff17e395e}" FolderPath="Methods\">

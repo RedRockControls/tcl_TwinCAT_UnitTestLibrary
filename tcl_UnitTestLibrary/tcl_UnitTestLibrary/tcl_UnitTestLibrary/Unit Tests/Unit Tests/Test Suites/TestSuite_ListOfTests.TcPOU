@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
 FUNCTION_BLOCK TestSuite_ListOfTests
 VAR
-    TestRunner                      : T_TestRunner;
+    TestRunner                      : T_TestRunner(TestSuiteName := 'TestSuite_ListOfTests', Verbose := FALSE);
     Test_GetTestHandlesEmptyList    : Test_GetTestHandlesEmptyList(TestRunner);
     Test_GetTestHandlesInvalidIndex : Test_GetTestHandlesInvalidIndex(TestRunner);
     Test_GetTestReturnsCorrectTest  : Test_GetTestReturnsCorrectTest(TestRunner);
@@ -14,28 +14,8 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[TestRunner(TestSuiteName := 'TestSuite_ListOfTests');
+      <ST><![CDATA[TestRunner.CyclicUpdate();
 ]]></ST>
     </Implementation>
-    <Method Name="AddTest" Id="{b78b7c35-615e-437f-9ccd-9a11a2a02d6c}">
-      <Declaration><![CDATA[METHOD AddTest
-VAR_INPUT
-	UnitTest	: I_UnitTest;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TestRunner.AddTest(UnitTest);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="FB_exit" Id="{781684c6-3f48-40c1-a987-34cc250a5b70}">
-      <Declaration><![CDATA[METHOD FB_exit : BOOL
-VAR_INPUT
-	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TestRunner.ClearTests();]]></ST>
-      </Implementation>
-    </Method>
   </POU>
 </TcPlcObject>

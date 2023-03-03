@@ -1,12 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="AssertNearlyEquals" Id="{d9a01481-b59d-41f5-985c-6df650c93c6a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION AssertNearlyEquals : BOOL
+  <POU Name="AssertEquals_STRING" Id="{3f350298-84b3-49fe-9a33-20a55bb8ec87}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION AssertEquals_STRING : BOOL
 VAR_INPUT
     Source   : T_MaxString;
-    Expected : LREAL;
-    Actual   : LREAL;
-    Delta    : LREAL;
+    Expected : T_MaxString;
+    Actual   : T_MaxString;
     Message  : T_MaxString;
 END_VAR
 VAR_OUTPUT
@@ -14,13 +13,13 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
+      <ST><![CDATA[IF Expected <> Actual THEN
     F_LogResult(Source, FormatStringEx1('Assertion Failed - %s', Message));
     Failed := TRUE;
     RETURN;
 END_IF
 
-AssertNearlyEquals := TRUE;
+AssertEquals_STRING := TRUE;
 ]]></ST>
     </Implementation>
   </POU>
