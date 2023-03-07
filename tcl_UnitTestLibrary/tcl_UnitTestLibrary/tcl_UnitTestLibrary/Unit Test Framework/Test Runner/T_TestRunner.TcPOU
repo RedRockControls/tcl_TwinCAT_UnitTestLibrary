@@ -18,15 +18,17 @@ VAR
     TestIterator     : T_TestIterator;
     CurrentTest      : I_UnitTest;
 
-    RunTests      : BOOL := TRUE;
-    TestFailed    : BOOL;
-    TestCompleted : BOOL;
+    RunTests          : BOOL := TRUE;
+    TestFailed        : BOOL;
+    TestCompleted     : BOOL;
+    AllTestsCompleted : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
     <Folder Name="Methods" Id="{35bbb33e-58f9-46f6-83b2-7eeb5a0d79dc}" />
+    <Folder Name="Properties" Id="{7af4ba9e-2e23-48af-83d2-a78ec9cce9dd}" />
     <Method Name="AddTest" Id="{aff2d568-ab55-47bc-af2b-94e85ba5e218}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AddTest
 VAR_INPUT
@@ -56,11 +58,12 @@ END_VAR
         IF RunTests THEN
             RunTests := FALSE;
             TestIterator.Initialise(TestList);
-            ResultsSummary   := '';
-            FailedTestsCount := 0;
-            PassedTestsCount := 0;
+            ResultsSummary    := '';
+            FailedTestsCount  := 0;
+            PassedTestsCount  := 0;
+            AllTestsCompleted := FALSE;
             F_LogResult(Source := TestSuiteName, Message := 'Starting Tests');
-            State            := sGetTest;
+            State := sGetTest;
         END_IF
 
     sGetTest:
@@ -92,14 +95,15 @@ END_VAR
 
     sCheckResults:
         ResultsSummary := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
-                                          F_DINT(PassedTestsCount),
-                                          F_DINT(FailedTestsCount));
+                                        F_DINT(PassedTestsCount),
+                                        F_DINT(FailedTestsCount));
 
         F_LogResult(Source  := TestSuiteName,
                     Message := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
-                                               F_DINT(PassedTestsCount),
-                                               F_DINT(FailedTestsCount)));
-        State := sInit;
+                                             F_DINT(PassedTestsCount),
+                                             F_DINT(FailedTestsCount)));
+        AllTestsCompleted := TRUE;
+        State             := sInit;
 
 END_CASE
 ]]></ST>
@@ -131,5 +135,16 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="TestsCompleted" Id="{f1cfa0dd-9b7a-4a7e-85d3-02076a295709}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestsCompleted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{e62d03c9-e800-4a62-a3b1-ac1d1cba6068}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestsCompleted := AllTestsCompleted;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
   </POU>
 </TcPlcObject>
