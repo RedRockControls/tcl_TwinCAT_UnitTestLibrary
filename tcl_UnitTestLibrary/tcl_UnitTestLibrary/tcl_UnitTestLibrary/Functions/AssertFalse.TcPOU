@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
-  <POU Name="AssertTrue" Id="{3d3346b2-4427-4014-80db-924808734b9a}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION AssertTrue : BOOL
+  <POU Name="AssertFalse" Id="{c310ec69-3f4e-4700-9b2f-8cedadea837b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION AssertFalse : BOOL
 VAR_INPUT
     Source    : T_MaxString;
     Condition : BOOL;
@@ -12,12 +12,13 @@ VAR_OUTPUT
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT Condition THEN
+      <ST><![CDATA[IF Condition THEN
     F_LogResult(Source, FormatStringEx1('Assertion Failed - %s', Message));
     Failed := TRUE;
 ELSE
-	AssertTrue := TRUE;
+	AssertFalse := TRUE;
 END_IF
+
 ]]></ST>
     </Implementation>
   </POU>

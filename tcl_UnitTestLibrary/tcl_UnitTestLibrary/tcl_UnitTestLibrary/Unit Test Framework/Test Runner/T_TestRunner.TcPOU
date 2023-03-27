@@ -9,17 +9,19 @@ VAR
         sRunTest,
         sCheckResults
     );
-    TestSuiteName    : T_MaxString := 'TestSuite';
-    Verbose          : BOOL;
-	StopOnFailedTest : BOOL;
-    ResultsSummary   : T_MaxString;
-    PassedTestsCount : DINT;
-    FailedTestsCount : DINT;
-    TestList         : T_ListOfTests(Capacity := 50);
-    TestIterator     : T_TestIterator;
-    CurrentTest      : I_UnitTest;
+    TestSuiteName     : T_MaxString := 'TestSuite';
+    Verbose           : BOOL;
+    StopOnFailedTest  : BOOL;
+    RunOnDownload     : BOOL;
+    ResultsSummary    : T_MaxString;
+    PassedTestsCount  : DINT;
+    FailedTestsCount  : DINT;
+    SkippedTestsCount : DINT;
+    TestList          : T_ListOfTests(Capacity := 50);
+    TestIterator      : T_TestIterator;
+    CurrentTest       : I_UnitTest;
 
-    RunTests           : BOOL := TRUE;
+    RunTests           : BOOL;
     TestFailed         : BOOL;
     TestCompleted      : BOOL;
     _AllTestsCompleted : BOOL;
@@ -85,6 +87,7 @@ END_VAR
             ResultsSummary     := '';
             FailedTestsCount   := 0;
             PassedTestsCount   := 0;
+            SkippedTestsCount  := 0;
             _AllTestsCompleted := FALSE;
             F_LogResult(Source := TestSuiteName, Message := 'Starting Tests');
             State := sGetTest;
@@ -116,7 +119,8 @@ END_VAR
             END_IF
 
             IF TestFailed AND StopOnFailedTest THEN
-                State := sCheckResults;
+                SkippedTestsCount := TestList.Count - (FailedTestsCount + PassedTestsCount);
+                State             := sCheckResults;
             ELSE
                 State := sGetTest;
             END_IF
@@ -124,14 +128,16 @@ END_VAR
         END_IF
 
     sCheckResults:
-        ResultsSummary := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
+        ResultsSummary := FormatString3('Tests completed. %d Tests Passed, %d Tests Failed, %d Tests Skipped',
                                         F_DINT(PassedTestsCount),
-                                        F_DINT(FailedTestsCount));
+                                        F_DINT(FailedTestsCount),
+                                        F_DINT(SkippedTestsCount));
 
         F_LogResult(Source  := TestSuiteName,
-                    Message := FormatString2('Tests completed. %d Tests Passed, %d Tests Failed',
-                                             F_DINT(PassedTestsCount),
-                                             F_DINT(FailedTestsCount)));
+                    Message := FormatString3('Tests completed. %d Tests Passed, %d Tests Failed, %d Tests Skipped',
+                                        F_DINT(PassedTestsCount),
+                                        F_DINT(FailedTestsCount),
+                                        F_DINT(SkippedTestsCount)));
         _AllTestsCompleted := TRUE;
         _AllTestsPassed    := (FailedTestsCount = 0);
         State              := sInit;
@@ -148,12 +154,15 @@ VAR_INPUT
     TestSuiteName    : T_MaxString := 'TestSuite';
     Verbose          : BOOL;
     StopOnFailedTest : BOOL;
+    RunOnDownload    : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[THIS^.TestSuiteName    := TestSuiteName;
 THIS^.Verbose          := Verbose;
 THIS^.StopOnFailedTest := StopOnFailedTest;
+THIS^.RunOnDownload    := RunOnDownload;
+THIS^.RunTests         := RunOnDownload;
 ]]></ST>
       </Implementation>
     </Method>
@@ -164,7 +173,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[RunTests := TRUE;
+        <ST><![CDATA[RunTests := RunOnDownload;
 ]]></ST>
       </Implementation>
     </Method>
