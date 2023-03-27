@@ -13,6 +13,9 @@ VAR
     InstanceName : T_MaxString; // Automatically initialised with the full name of the instance
     TestName     : T_MaxString;
     TestRunner   : I_TestRunner;
+	
+	{attribute 'analysis' := '-33'} // inhibit unused variable warning
+    _TestFailed  : BOOL; // intermediate result
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -44,7 +47,6 @@ IF TestRunner <> 0 THEN
 	THIS^.TestRunner := TestRunner;
 	TestRunner.AddTest(THIS^);
 END_IF
-
 ]]></ST>
       </Implementation>
     </Method>

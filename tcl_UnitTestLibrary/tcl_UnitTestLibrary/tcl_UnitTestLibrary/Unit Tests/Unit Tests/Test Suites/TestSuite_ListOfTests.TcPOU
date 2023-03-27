@@ -4,7 +4,7 @@
     <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
 FUNCTION_BLOCK TestSuite_ListOfTests
 VAR
-    TestRunner                      : T_TestRunner(TestSuiteName := 'TestSuite_ListOfTests', Verbose := FALSE);
+    TestRunner                      : T_TestRunner(TestSuiteName := 'TestSuite_ListOfTests', Verbose := FALSE, StopOnFailedTest := FALSE);
     Test_GetTestHandlesEmptyList    : Test_GetTestHandlesEmptyList(TestRunner);
     Test_GetTestHandlesInvalidIndex : Test_GetTestHandlesInvalidIndex(TestRunner);
     Test_GetTestReturnsCorrectTest  : Test_GetTestReturnsCorrectTest(TestRunner);
