@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.0.6.0</ProjectVersion>
+    <ProjectVersion>1.0.7.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,8 +30,7 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>RunOnDownload adde to T_TestRunner FB_init
-AssertFalse added</Description>
+    <Description>Starting Test &lt;&gt; message added</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
