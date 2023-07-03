@@ -1,5 +1,6 @@
 ![Pic](https://github.com/RedRockControls/tcl_TwinCAT_UnitTestLibrary/blob/main/img/Banner.JPG)
 
+
 # TwinCAT_UnitTestLibrary
 
 TwinCAT_UnitTestLibrary is a lightweight unit test library for testing TwinCAT3 source code - 
@@ -31,3 +32,7 @@ To create a test:
 The library contains unit tests that can be used as examples of how to use the library.
 
 NOTE: Due to an apparent bug in how nested function blocks are initialised, when tests are added to a test suite, online change is not possible so the code must be re-downloaded to the runtime. 
+
+Code automatically formatted using
+
+![StweepLogo](https://github.com/RedRockControls/tcl_TwinCAT_UnitTestLibrary/assets/32986382/2181db31-3c1e-449d-b568-c7b0ed50b36d)
