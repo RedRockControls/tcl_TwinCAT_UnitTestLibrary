@@ -3,13 +3,11 @@
   <POU Name="MAIN" Id="{cfaff396-02d6-4fc1-bf48-96a5a0da3de0}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MAIN
 VAR
-    TestSuite_AssertTests : TestSuite_AssertTests;
     TestSuite_ListOfTests : TestSuite_ListOfTests;
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[TestSuite_AssertTests();
-TestSuite_ListOfTests();
+      <ST><![CDATA[TestSuite_ListOfTests();
 ]]></ST>
     </Implementation>
   </POU>

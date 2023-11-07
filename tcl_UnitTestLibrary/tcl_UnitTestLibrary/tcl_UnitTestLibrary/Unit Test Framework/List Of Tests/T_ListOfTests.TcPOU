@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_ListOfTests" Id="{1fcff8f0-b8c4-4bed-b839-fdb26fdb9776}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK T_ListOfTests IMPLEMENTS I_ListOfTests
 VAR
@@ -32,13 +32,12 @@ END_VAR
     pTest := Buffer.pBuffer;
 END_IF
 
-AssertTrue(Source    := 'T_ListOfTests.AddTest()',
-             Condition := pTest > 0,
-             Message   := 'Buffer not initialised');
-
-IF pTest <> 0 THEN			 
-	pTest[_Count] := Test;
-	_Count        := _Count + 1;
+IF pTest = 0 THEN
+    F_LogResult(Source  := 'T_ListOfTests.AddTest()',
+                Message := 'Buffer not initialised');
+ELSE
+    pTest[_Count] := Test;
+    _Count        := _Count + 1;
 END_IF
 ]]></ST>
       </Implementation>

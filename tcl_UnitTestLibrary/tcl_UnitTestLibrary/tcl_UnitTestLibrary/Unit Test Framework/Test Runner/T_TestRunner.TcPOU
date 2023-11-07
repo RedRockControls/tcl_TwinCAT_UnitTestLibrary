@@ -7,12 +7,14 @@ VAR
         sInit,
         sGetTest,
         sRunTest,
-        sCheckResults
-    );
-    TestSuiteName     : T_MaxString := 'TestSuite';
-    Verbose           : BOOL;
-    StopOnFailedTest  : BOOL;
-    RunOnDownload     : BOOL;
+        sCheckResults);
+
+    // property fields...
+    _TestSuiteName    : T_MaxString := 'TestSuite';
+    _Verbose          : BOOL        := TRUE;
+    _StopOnFailedTest : BOOL        := FALSE;
+    _RunOnDownload    : BOOL        := TRUE;
+
     ResultsSummary    : T_MaxString;
     PassedTestsCount  : DINT;
     FailedTestsCount  : DINT;
@@ -22,8 +24,6 @@ VAR
     CurrentTest       : I_UnitTest;
 
     RunTests           : BOOL;
-    TestFailed         : BOOL;
-    TestCompleted      : BOOL;
     _AllTestsCompleted : BOOL;
     _AllTestsPassed    : BOOL;
 END_VAR
@@ -105,11 +105,10 @@ END_VAR
         END_IF
 
     sRunTest:
-        CurrentTest.RunTest(TestCompleted => TestCompleted,
-                            TestFailed    => TestFailed);
+        CurrentTest.RunTest();
 
-        IF TestCompleted THEN
-            IF TestFailed THEN
+        IF CurrentTest.TestCompleted THEN
+            IF CurrentTest.TestFailed THEN
                 FailedTestsCount := FailedTestsCount + 1;
                 F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Test failed <%s>', CurrentTest.Name));
             ELSE
@@ -119,7 +118,7 @@ END_VAR
                 END_IF
             END_IF
 
-            IF TestFailed AND StopOnFailedTest THEN
+            IF CurrentTest.TestFailed AND StopOnFailedTest THEN
                 SkippedTestsCount := TestList.Count - (FailedTestsCount + PassedTestsCount);
                 State             := sCheckResults;
             ELSE
@@ -147,29 +146,27 @@ END_CASE
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="FB_init" Id="{4d8559a3-1b79-40c6-ae87-d14857fb3a8a}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
-VAR_INPUT
-    bInitRetains     : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-    bInCopyCode      : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
-    TestSuiteName    : T_MaxString := 'TestSuite';
-    Verbose          : BOOL;
-    StopOnFailedTest : BOOL;
-    RunOnDownload    : BOOL;
+    <Property Name="RunOnDownload" Id="{589ac574-6a7a-48d9-bd11-679d7f11dd78}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY RunOnDownload : BOOL]]></Declaration>
+      <Get Name="Get" Id="{32ca8641-ba9c-4e37-a693-e650ffafd2ab}">
+        <Declaration><![CDATA[VAR
 END_VAR
 ]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.TestSuiteName    := TestSuiteName;
-THIS^.Verbose          := Verbose;
-THIS^.StopOnFailedTest := StopOnFailedTest;
-THIS^.RunOnDownload    := RunOnDownload;
-THIS^.RunTests         := RunOnDownload;
-]]></ST>
-      </Implementation>
-    </Method>
+        <Implementation>
+          <ST><![CDATA[RunOnDownload := _RunOnDownload;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{75d2a723-bb03-4c86-870e-abcdbc2601ec}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_RunOnDownload := RunOnDownload;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Start" Id="{78778059-eb1a-48b2-a0cc-e7bff17e395e}" FolderPath="Methods\">
-      <Declaration><![CDATA[{attribute 'call_after_online_change_slot' := '200'}
-METHOD Start
+      <Declaration><![CDATA[METHOD Start
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -178,5 +175,62 @@ END_VAR
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="StopOnFailedTest" Id="{ed732852-f636-4563-8334-13448d75d425}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY StopOnFailedTest : BOOL]]></Declaration>
+      <Get Name="Get" Id="{df52c8d3-5b4d-4be6-815e-57e8d5eb6c06}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[StopOnFailedTest := _StopOnFailedTest;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{f80c1446-94a1-418b-ac2a-d40781c03ef1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_StopOnFailedTest := StopOnFailedTest;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TestSuiteName" Id="{b81d7a8b-fa76-4ae4-8553-465877bb649f}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestSuiteName : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{cec5786c-cda8-4f84-b6ae-fa268c3de510}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestSuiteName := _TestSuiteName;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{23be8904-ddeb-4271-a6f0-1d16b0c29f25}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestSuiteName := TestSuiteName;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Verbose" Id="{6d65a53d-2121-4b55-9e39-b65cc210c67b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Verbose : BOOL]]></Declaration>
+      <Get Name="Get" Id="{3a790e08-9510-47d4-b016-6a71df92a5d4}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Verbose := _Verbose;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{8ed75ce8-43cf-412a-bf11-2be55205c463}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Verbose := Verbose;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
   </POU>
 </TcPlcObject>

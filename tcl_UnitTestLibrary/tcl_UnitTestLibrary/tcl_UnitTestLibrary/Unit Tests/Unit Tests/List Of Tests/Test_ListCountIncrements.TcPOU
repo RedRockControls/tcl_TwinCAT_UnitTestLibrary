@@ -4,7 +4,7 @@
     <Declaration><![CDATA[FUNCTION_BLOCK Test_ListCountIncrements EXTENDS T_UnitTestBase
 VAR
     List  : T_ListOfTests(Capacity := 10);
-    Test0 : Test_ExampleTest(0);
+    Test0 : Test_ExampleTest;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -14,23 +14,18 @@ END_VAR
       <Declaration><![CDATA[METHOD Init
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[List.Clear();
+        <ST><![CDATA[SUPER^.Init();
+List.Clear();
 List.AddTest(Test0);
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="RunTest" Id="{7d69c6e7-5ecd-40f0-afb8-6c5dace0a11b}">
       <Declaration><![CDATA[METHOD RunTest
-VAR_OUTPUT
-    TestCompleted : BOOL;
-    TestFailed    : BOOL;
-END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AssertTrue(Source    := TestName,
-             Condition := List.Count = 1,
-             Message   := 'List.Count was not 1',
-             Failed    => TestFailed);
+        <ST><![CDATA[AssertIsTrue(Condition := List.Count = 1,
+             Message   := 'List.Count was not 1');
 
 TestCompleted := TRUE;
 ]]></ST>

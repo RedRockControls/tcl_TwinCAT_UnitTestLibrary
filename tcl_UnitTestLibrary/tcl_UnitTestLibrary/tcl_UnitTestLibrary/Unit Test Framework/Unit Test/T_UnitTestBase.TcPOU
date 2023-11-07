@@ -10,12 +10,13 @@ END_VAR
 VAR
     {attribute 'instance-path'}
     {attribute 'no_init'}
-    InstanceName : T_MaxString; // Automatically initialised with the full name of the instance
+    {attribute 'analysis' := '-33'} // Inhibit unused variable warning
+    InstanceName : T_MaxString;     // Initialised with the instance name
     TestName     : T_MaxString;
-    TestRunner   : I_TestRunner;
-	
-	{attribute 'analysis' := '-33'} // inhibit unused variable warning
-    _TestFailed  : BOOL; // intermediate result
+
+    _TestCompleted : BOOL;
+    _TestFailed    : BOOL;
+    State          : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -23,38 +24,126 @@ END_VAR
     </Implementation>
     <Folder Name="Methods" Id="{a5772276-00c5-43a4-85c1-e780c7c7de3b}" />
     <Folder Name="Properties" Id="{eb7e9c1f-ae66-405a-820c-688b53e1a9a9}" />
-    <Method Name="FB_init" Id="{d80ab3c1-8238-4897-a324-064f979df65c}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
+    <Method Name="AssertAnyEquals" Id="{8c39ac6a-e3a4-4e64-8b71-f758c94e977f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertAnyEquals : BOOL
 VAR_INPUT
-    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-    bInCopyCode  : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
-    TestRunner   : I_TestRunner;
+    Expected : ANY;
+    Actual   : ANY;
+    Message  : T_MaxString;
 END_VAR
+VAR
+    ComparisonResult : DINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ComparisonResult := MEMCMP(pBuf1 := Expected.pValue,
+                           pBuf2 := Actual.pValue,
+                           n     := DINT_TO_UDINT(Actual.diSize));
+
+IF Expected.TypeClass <> Actual.TypeClass THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+
+ELSIF Expected.diSize <> Actual.diSize THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+
+ELSIF ComparisonResult <> 0 THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+END_IF
+
+AssertAnyEquals := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AssertIsTrue" Id="{cad875ec-dfd3-4726-81dd-a6735f47baa6}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertIsTrue : BOOL
+VAR_INPUT
+    Condition : BOOL;
+    Message   : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Condition THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+END_IF
+
+AssertIsTrue := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AssertRealsAreEqual" Id="{0e4ee858-c05e-426c-a0eb-481c1ac21bf1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertRealsAreEqual : BOOL
+VAR_INPUT
+    Expected : LREAL;
+    Actual   : LREAL;
+    Delta    : LREAL;
+    Message  : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+END_IF
+
+AssertRealsAreEqual := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AssertStringsAreEqual" Id="{922f5d37-eaf4-494b-9220-811e46507baa}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertStringsAreEqual : BOOL
+VAR_INPUT
+    Expected : T_MaxString;
+    Actual   : T_MaxString;
+    Message   : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Expected <> Actual THEN
+    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+END_IF
+
+AssertStringsAreEqual := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="BaseClass" Id="{b4d027a7-046f-48d1-8468-ee31a4969371}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY BaseClass : I_UnitTest]]></Declaration>
+      <Get Name="Get" Id="{70254247-b8af-4d35-af04-a3ea68849a8d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BaseClass := THIS^;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init
 VAR
     StringSplitter : StringSplitter;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[StringSplitter.Init(Str    := InstanceName,
-                    Delim1 := '.',
-                    Delim2 := '');
-
+        <ST><![CDATA[StringSplitter.Init(Str := InstanceName, Delim1 := '.', Delim2 := '');
 WHILE StringSplitter.HasMore() DO
     TestName := StringSplitter.GetNext(); // to get last sub-section
 END_WHILE
 
-IF TestRunner <> 0 THEN
-	THIS^.TestRunner := TestRunner;
-	TestRunner.AddTest(THIS^);
-END_IF
+State         := 0;
+TestFailed    := FALSE;
+TestCompleted := FALSE;
 ]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Property Name="Name" Id="{0404f2a6-6d2f-43ce-8288-d9af3f97471a}" FolderPath="Properties\">
@@ -73,14 +162,42 @@ END_VAR
     <Method Name="RunTest" Id="{c72e0459-07ad-41cb-aa90-04d972433a01}" FolderPath="Methods\">
       <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
 METHOD RunTest
-VAR_OUTPUT
-    TestCompleted : BOOL;
-    TestFailed    : BOOL;
-END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
+    <Property Name="TestCompleted" Id="{2c6255e4-e476-4dee-8897-fed2ded26b5a}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestCompleted : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b3c15a73-0247-4742-9a74-f07336c20bf4}">
+        <Declaration><![CDATA[PUBLIC
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestCompleted := _TestCompleted;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{ad11a1d3-bb4b-4f00-b20e-3b78d2e07e57}">
+        <Declaration><![CDATA[PROTECTED
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestCompleted := TestCompleted;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="TestFailed" Id="{00cc0457-806b-4c3e-b342-8020d5b41549}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestFailed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{aa3f4237-7e3a-4059-b45a-a9bca92ca4d4}">
+        <Declaration><![CDATA[PUBLIC]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[TestFailed := _TestFailed;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{2ab0aa07-ac71-4498-8066-a1ebdcc81657}">
+        <Declaration><![CDATA[PRIVATE]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_TestFailed := TestFailed;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
   </POU>
 </TcPlcObject>

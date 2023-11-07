@@ -1,35 +1,22 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="Test_ExampleTest" Id="{938982c1-236f-47a0-9361-5ca61f22a12c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK Test_ExampleTest EXTENDS T_UnitTestBase
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{624ecc00-0a68-49a5-a3d1-aa4e18c059dd}">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{d43fbc30-af37-40f9-89b6-ca71e886dbd4}">
       <Declaration><![CDATA[METHOD RunTest
-VAR_OUTPUT
-    TestCompleted : BOOL;
-    TestFailed    : BOOL;
-END_VAR
 VAR
     TestValue : LREAL := 133.456;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AssertNearlyEquals(Source   := THIS^.TestName,
-                   Expected := 133.456,
-                   Actual   := TestValue,
-                   Delta    := 0.001,
-                   Message  := 'TestValue <> 133.456',
-                   Failed   => TestFailed);
+        <ST><![CDATA[AssertRealsAreEqual(Expected := 133.456,
+                    Actual   := TestValue,
+                    Delta    := 0.001,
+                    Message  := 'TestValue <> 133.456');
 
 TestCompleted := TRUE;
 ]]></ST>

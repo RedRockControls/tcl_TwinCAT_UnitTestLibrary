@@ -4,10 +4,10 @@
     <Declaration><![CDATA[FUNCTION_BLOCK Test_ListClear EXTENDS T_UnitTestBase
 VAR
     List  : T_ListOfTests(Capacity := 10);
-    Test0 : Test_ExampleTest(0);
-    Test1 : Test_ExampleTest(0);
-    Test2 : Test_ExampleTest(0);
-    Test3 : Test_ExampleTest(0);
+    Test0 : Test_ExampleTest;
+    Test1 : Test_ExampleTest;
+    Test2 : Test_ExampleTest;
+    Test3 : Test_ExampleTest;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -17,7 +17,8 @@ END_VAR
       <Declaration><![CDATA[METHOD Init
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[List.Clear();
+        <ST><![CDATA[SUPER^.Init();
+List.Clear();
 List.AddTest(Test0);
 List.AddTest(Test1);
 List.AddTest(Test2);
@@ -27,23 +28,15 @@ List.AddTest(Test3);
     </Method>
     <Method Name="RunTest" Id="{4404b0c7-fb1a-449c-948d-c29a698c43db}">
       <Declaration><![CDATA[METHOD RunTest
-VAR_OUTPUT
-    TestCompleted : BOOL;
-    TestFailed    : BOOL;
-END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AssertTrue(Source    := TestName,
-             Condition := List.Count = 4,
-             Message   := 'List.Count was not 4',
-             Failed    => TestFailed);
+        <ST><![CDATA[AssertIsTrue(Condition := List.Count = 4,
+             Message   := 'List.Count was not 4');
 			 
 List.Clear();			 
 
-AssertTrue(Source    := TestName,
-             Condition := List.Count = 0,
-             Message   := 'List.Count was not 0',
-             Failed    => TestFailed);
+AssertIsTrue(Condition := List.Count = 0,
+             Message   := 'List.Count was not 0');
 
 TestCompleted := TRUE;
 ]]></ST>

@@ -13,16 +13,13 @@ END_VAR
       <Declaration><![CDATA[METHOD Init
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[List.Clear();
+        <ST><![CDATA[SUPER^.Init();
+List.Clear();
 ]]></ST>
       </Implementation>
     </Method>
     <Method Name="RunTest" Id="{196a1154-4f83-4db1-bc9d-8909993894ea}">
       <Declaration><![CDATA[METHOD RunTest
-VAR_OUTPUT
-    TestCompleted : BOOL;
-    TestFailed    : BOOL;
-END_VAR
 VAR_INST
     TestNumber4 : I_UnitTest;
 END_VAR
@@ -30,10 +27,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[TestNumber4 := List.GetTest(4);
 
-AssertTrue(Source    := TestName,
-             Condition := (TestNumber4 = 0),
-             Message   := 'GetTest() has unexpected return value',
-             Failed    => TestFailed);
+AssertIsTrue(Condition := (TestNumber4 = 0),
+             Message   := 'GetTest() has unexpected return value');
 
 TestCompleted := TRUE;
 ]]></ST>

@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.0.7.0</ProjectVersion>
+    <ProjectVersion>1.0.8.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,25 +30,11 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>Starting Test &lt;&gt; message added</Description>
+    <Description>TestSuite.Init required to initialise TestRunner
+Assert methods added to UnitTest base class</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Functions\AssertEquals.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Functions\AssertEquals_STRING.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Functions\AssertNearlyEquals.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Functions\AssertTrue.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Functions\AssertFalse.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Globals.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -98,13 +84,6 @@
     <Compile Include="Unit Test Framework\Unit Test\T_UnitTestBase.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Unit Tests\Unit Tests\Assertion Tests\Test_AssertEqualsDetects_INTS_ThatDiffer.TcPOU">
-      <SubType>Code</SubType>
-      <ExcludeFromBuild>false</ExcludeFromBuild>
-    </Compile>
-    <Compile Include="Unit Tests\Unit Tests\Assertion Tests\Test_AssertEquals_STRING.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Unit Tests\Unit Tests\Example Test\Test_ExampleTest.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -131,9 +110,6 @@
     <Compile Include="Unit Tests\Unit Tests\List Of Tests\Test_ListClear.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Unit Tests\Unit Tests\Test Suites\TestSuite_AssertTests.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Unit Tests\Unit Tests\Test Suites\TestSuite_ListOfTests.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -142,7 +118,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Functions" />
     <Folder Include="String Utils" />
     <Folder Include="Tasks" />
     <Folder Include="Unit Tests" />
@@ -151,7 +126,6 @@
     <Folder Include="Unit Test Framework\Unit Test" />
     <Folder Include="Unit Test Framework\Test Runner" />
     <Folder Include="Unit Tests\Unit Tests" />
-    <Folder Include="Unit Tests\Unit Tests\Assertion Tests" />
     <Folder Include="Unit Tests\Unit Tests\List Of Tests" />
     <Folder Include="Unit Tests\Unit Tests\Example Test" />
     <Folder Include="Unit Tests\Unit Tests\Test Suites" />
