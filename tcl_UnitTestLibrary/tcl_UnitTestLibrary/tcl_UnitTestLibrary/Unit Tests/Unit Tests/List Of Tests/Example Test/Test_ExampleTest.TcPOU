@@ -13,7 +13,7 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AssertRealsAreEqual(Expected := 133.456,
+        <ST><![CDATA[AssertEquals_LREAL(Expected := 133.456,
                     Actual   := TestValue,
                     Delta    := 0.001,
                     Message  := 'TestValue <> 133.456');

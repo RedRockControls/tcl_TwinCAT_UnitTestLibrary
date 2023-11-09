@@ -39,7 +39,7 @@ END_VAR
         <ST><![CDATA[Test2_InterfacePointer := Test2;
 ReturnValue            := List.GetTest(2);
 
-AssertAnyEquals(Expected := Test2_InterfacePointer,
+AssertEquals_ANY(Expected := Test2_InterfacePointer,
                 Actual   := ReturnValue,
                 Message  := 'Interface pointer TestNumber2 was not correct');
 

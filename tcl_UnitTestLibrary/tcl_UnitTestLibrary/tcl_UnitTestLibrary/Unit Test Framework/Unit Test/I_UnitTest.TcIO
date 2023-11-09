@@ -5,12 +5,6 @@
 ]]></Declaration>
     <Folder Name="Methods" Id="{f66815a2-79a3-4000-9a33-2104bd81cf4b}" />
     <Folder Name="Properties" Id="{0dcf6e56-0e3d-469a-9fcd-dd7362e9d78d}" />
-    <Property Name="BaseClass" Id="{4e4a9d73-6137-40ee-ba4e-bff2a2a48f29}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY BaseClass : I_UnitTest]]></Declaration>
-      <Get Name="Get" Id="{f40f6524-5efe-4117-ab2b-1e1efbe5c466}">
-        <Declaration><![CDATA[]]></Declaration>
-      </Get>
-    </Property>
     <Method Name="Init" Id="{09ec4ed5-09ae-4553-8c1c-9702dbc2130b}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Init
 VAR_INPUT
