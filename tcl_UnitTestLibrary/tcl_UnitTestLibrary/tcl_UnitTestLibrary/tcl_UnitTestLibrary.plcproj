@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.0.9.0</ProjectVersion>
+    <ProjectVersion>1.0.10.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,8 +30,7 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>AssertEquals_ methods added to T_UnitTestBase
-Assert methods renamed</Description>
+    <Description>IniTest method added to T_UnitTestBase for user's test initialisation. Called by Init method</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>

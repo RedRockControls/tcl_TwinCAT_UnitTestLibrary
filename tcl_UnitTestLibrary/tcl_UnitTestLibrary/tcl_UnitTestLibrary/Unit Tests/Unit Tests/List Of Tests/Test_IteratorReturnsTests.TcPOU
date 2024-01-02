@@ -18,8 +18,7 @@ END_VAR
       <Declaration><![CDATA[METHOD Init
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[SUPER^.Init();
-List.Clear();
+        <ST><![CDATA[List.Clear();
 
 List.AddTest(Test0);
 List.AddTest(Test1);

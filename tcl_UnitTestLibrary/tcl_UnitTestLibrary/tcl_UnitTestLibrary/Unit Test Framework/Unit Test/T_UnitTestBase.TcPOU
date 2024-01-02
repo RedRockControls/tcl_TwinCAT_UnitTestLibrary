@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-FUNCTION_BLOCK T_UnitTestBase IMPLEMENTS I_UnitTest
+FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -319,12 +319,17 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_init" Id="{c62c0f8f-0f6e-44f1-a5cd-859e74c8a1a2}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FB_init : BOOL
+    <Method Name="Init" Id="{f9ce4d7f-44b0-4fb5-81b4-e0c1e331d42a}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ABSTRACT Init
 VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
 END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitBase" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FINAL InitBase
 VAR
     StringSplitter : StringSplitter;
 END_VAR
@@ -335,17 +340,11 @@ WHILE StringSplitter.HasMore() DO
     TestName := StringSplitter.GetNext(); // to get last sub-section
 END_WHILE
 
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[State         := 0;
+State         := 0;
 TestFailed    := FALSE;
 TestCompleted := FALSE;
-]]></ST>
+
+Init();]]></ST>
       </Implementation>
     </Method>
     <Property Name="Name" Id="{0404f2a6-6d2f-43ce-8288-d9af3f97471a}" FolderPath="Properties\">
@@ -363,7 +362,7 @@ END_VAR
     </Property>
     <Method Name="RunTest" Id="{c72e0459-07ad-41cb-aa90-04d972433a01}" FolderPath="Methods\">
       <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
-METHOD RunTest
+METHOD ABSTRACT RunTest
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[]]></ST>
@@ -395,7 +394,7 @@ METHOD RunTest
         </Implementation>
       </Get>
       <Set Name="Set" Id="{2ab0aa07-ac71-4498-8066-a1ebdcc81657}">
-        <Declaration><![CDATA[PRIVATE]]></Declaration>
+        <Declaration><![CDATA[PROTECTED]]></Declaration>
         <Implementation>
           <ST><![CDATA[_TestFailed := TestFailed;]]></ST>
         </Implementation>

@@ -89,6 +89,7 @@ END_VAR
             PassedTestsCount   := 0;
             SkippedTestsCount  := 0;
             _AllTestsCompleted := FALSE;
+            _AllTestsPassed    := FALSE;
             F_LogResult(Source := TestSuiteName, Message := 'Starting Tests');
             State := sGetTest;
         END_IF
@@ -96,7 +97,7 @@ END_VAR
     sGetTest:
         IF TestIterator.HasMore() THEN
             CurrentTest := TestIterator.GetNext();
-            CurrentTest.Init();
+            CurrentTest.InitBase();
             F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Starting Test <%s>', CurrentTest.Name));
             State := sRunTest;
         ELSE
