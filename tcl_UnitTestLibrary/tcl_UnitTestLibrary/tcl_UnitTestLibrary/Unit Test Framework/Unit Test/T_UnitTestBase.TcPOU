@@ -1,12 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'reflection'}
+    <Declaration><![CDATA[{attribute 'call_after_init'}
+{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
-VAR_INPUT
-END_VAR
-VAR_OUTPUT
-END_VAR
 VAR
     {attribute 'instance-path'}
     {attribute 'no_init'}
@@ -329,7 +326,8 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="InitBase" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD FINAL InitBase
+      <Declaration><![CDATA[{attribute 'call_after_init'}
+METHOD FINAL InitBase
 VAR
     StringSplitter : StringSplitter;
 END_VAR
