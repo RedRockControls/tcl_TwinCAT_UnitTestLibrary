@@ -90,7 +90,7 @@ END_VAR
             SkippedTestsCount  := 0;
             _AllTestsCompleted := FALSE;
             _AllTestsPassed    := FALSE;
-            F_LogResult(Source := TestSuiteName, Message := 'Starting Tests');
+            F_LogMessage(Source := TestSuiteName, Message := 'Starting Tests');
             State := sGetTest;
         END_IF
 
@@ -98,7 +98,7 @@ END_VAR
         IF TestIterator.HasMore() THEN
             CurrentTest := TestIterator.GetNext();
             CurrentTest.InitBase();
-            F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Starting Test <%s>', CurrentTest.Name));
+            F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Starting Test <%s>', CurrentTest.Name));
             State := sRunTest;
         ELSE
             CurrentTest := 0;
@@ -111,11 +111,11 @@ END_VAR
         IF CurrentTest.TestCompleted THEN
             IF CurrentTest.TestFailed THEN
                 FailedTestsCount := FailedTestsCount + 1;
-                F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Test failed <%s>', CurrentTest.Name));
+                F_LogError(Source := TestSuiteName, Message := FormatStringEx1('Test failed <%s>', CurrentTest.Name));
             ELSE
                 PassedTestsCount := PassedTestsCount + 1;
                 IF Verbose THEN
-                    F_LogResult(Source := TestSuiteName, Message := FormatStringEx1('Test passed <%s>', CurrentTest.Name));
+                    F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Test passed <%s>', CurrentTest.Name));
                 END_IF
             END_IF
 
@@ -134,7 +134,7 @@ END_VAR
                                         F_DINT(FailedTestsCount),
                                         F_DINT(SkippedTestsCount));
 
-        F_LogResult(Source  := TestSuiteName,
+        F_LogMessage(Source  := TestSuiteName,
                     Message := FormatString3('Tests completed. %d Tests Passed, %d Tests Failed, %d Tests Skipped',
                                              F_DINT(PassedTestsCount),
                                              F_DINT(FailedTestsCount),

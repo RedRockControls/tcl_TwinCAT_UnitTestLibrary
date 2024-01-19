@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.0.11.0</ProjectVersion>
+    <ProjectVersion>1.0.12.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,10 +30,16 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>attribute 'call_after_init' applied to T_UnitTestBase.Init method</Description>
+    <Description>Errors output to Message Box</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Functions\F_LogError.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Functions\F_LogMessage.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Globals.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -72,9 +78,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Unit Test Framework\Test Runner\T_TestRunner.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Unit Test Framework\Unit Test\F_LogResult.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Unit Test Framework\Unit Test\I_UnitTest.TcIO">
@@ -117,6 +120,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Functions" />
     <Folder Include="String Utils" />
     <Folder Include="Tasks" />
     <Folder Include="Unit Tests" />

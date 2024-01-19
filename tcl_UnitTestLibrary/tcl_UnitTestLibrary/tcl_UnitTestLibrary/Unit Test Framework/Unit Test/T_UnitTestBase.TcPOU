@@ -9,7 +9,10 @@ VAR
     {attribute 'no_init'}
     {attribute 'analysis' := '-33'} // Inhibit unused variable warning
     InstanceName : T_MaxString;     // Initialised with the instance name
-    TestName     : T_MaxString;
+
+    Project  : T_MaxString;
+    Plc      : T_MaxString;
+    TestName : T_MaxString;
 
     _TestCompleted : BOOL;
     _TestFailed    : BOOL;
@@ -38,17 +41,17 @@ END_VAR
                            n     := DINT_TO_UDINT(Actual.diSize));
 
 IF Expected.TypeClass <> Actual.TypeClass THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 
 ELSIF Expected.diSize <> Actual.diSize THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 
 ELSIF ComparisonResult <> 0 THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -67,7 +70,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -86,7 +89,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -105,7 +108,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -124,7 +127,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -143,7 +146,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -163,7 +166,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -182,7 +185,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -202,7 +205,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -221,7 +224,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -240,7 +243,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -259,7 +262,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -278,7 +281,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -296,7 +299,7 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Condition THEN
-    F_LogResult(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
     TestFailed := TRUE;
     RETURN;
 END_IF
@@ -334,9 +337,14 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[StringSplitter.Init(Str := InstanceName, Delim1 := '.', Delim2 := '');
-WHILE StringSplitter.HasMore() DO
-    TestName := StringSplitter.GetNext(); // to get last sub-section
-END_WHILE
+
+IF StringSplitter.HasMore() THEN
+	Project := StringSplitter.GetNext();
+	Plc := StringSplitter.GetNext();
+	TestName := StringSplitter.GetRemainder();
+ELSE
+	TestName := 'Unknown Test';
+END_IF
 
 State         := 0;
 TestFailed    := FALSE;

@@ -33,7 +33,7 @@ END_VAR
 END_IF
 
 IF pTest = 0 THEN
-    F_LogResult(Source  := 'T_ListOfTests.AddTest()',
+    F_LogError(Source  := 'T_ListOfTests.AddTest()',
                 Message := 'Buffer not initialised');
 ELSE
     pTest[_Count] := Test;
