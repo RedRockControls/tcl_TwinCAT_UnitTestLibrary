@@ -17,6 +17,8 @@ VAR
     _TestCompleted : BOOL;
     _TestFailed    : BOOL;
     State          : INT;
+    CycleCount     : UDINT;
+    Retest         : BOOL;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -305,6 +307,30 @@ END_VAR
 END_IF
 
 AssertIsTrue := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AwaitConditionIsTrue" Id="{0f9e6b23-9d8e-408b-b421-7fec7bed5d6f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AwaitConditionIsTrue : BOOL
+VAR_INPUT
+    Condition : BOOL;
+	MaxCycles : UDINT;
+    Message   : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT Condition THEN
+    CycleCount := CycleCount + 1; // assumes cycle count is reset before calling this method
+    IF CycleCount > MaxCycles THEN
+        F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+        TestFailed           := TRUE;
+        AwaitConditionIsTrue := TRUE;
+    END_IF
+    RETURN;
+ELSE
+    CycleCount           := 0;
+    AwaitConditionIsTrue := TRUE;
+END_IF
 ]]></ST>
       </Implementation>
     </Method>
