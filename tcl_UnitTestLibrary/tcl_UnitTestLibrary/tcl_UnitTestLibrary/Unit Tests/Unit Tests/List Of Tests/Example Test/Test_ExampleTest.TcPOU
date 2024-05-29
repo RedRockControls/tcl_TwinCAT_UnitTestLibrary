@@ -6,15 +6,6 @@
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{64d702c6-19e1-4136-9b91-2e1d1578a16f}">
-      <Declaration><![CDATA[METHOD  Init
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[;]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{d43fbc30-af37-40f9-89b6-ca71e886dbd4}">
       <Declaration><![CDATA[METHOD RunTest
 VAR

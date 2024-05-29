@@ -5,8 +5,8 @@
 ]]></Declaration>
     <Folder Name="Methods" Id="{f66815a2-79a3-4000-9a33-2104bd81cf4b}" />
     <Folder Name="Properties" Id="{0dcf6e56-0e3d-469a-9fcd-dd7362e9d78d}" />
-    <Method Name="InitBase" Id="{09ec4ed5-09ae-4553-8c1c-9702dbc2130b}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD InitBase
+    <Method Name="Init" Id="{09ec4ed5-09ae-4553-8c1c-9702dbc2130b}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init
 VAR_INPUT
 END_VAR
 ]]></Declaration>

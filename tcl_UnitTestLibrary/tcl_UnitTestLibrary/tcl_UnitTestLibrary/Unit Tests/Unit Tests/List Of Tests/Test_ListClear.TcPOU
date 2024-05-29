@@ -13,8 +13,8 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{8a021792-fedf-418c-9fa3-308d88b77576}">
-      <Declaration><![CDATA[METHOD Init
+    <Method Name="RunTest" Id="{4404b0c7-fb1a-449c-948d-c29a698c43db}">
+      <Declaration><![CDATA[METHOD RunTest
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[List.Clear();
@@ -22,14 +22,8 @@ List.AddTest(Test0);
 List.AddTest(Test1);
 List.AddTest(Test2);
 List.AddTest(Test3);
-]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="RunTest" Id="{4404b0c7-fb1a-449c-948d-c29a698c43db}">
-      <Declaration><![CDATA[METHOD RunTest
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[AssertIsTrue(Condition := List.Count = 4,
+
+AssertIsTrue(Condition := List.Count = 4,
              Message   := 'List.Count was not 4');
 			 
 List.Clear();			 

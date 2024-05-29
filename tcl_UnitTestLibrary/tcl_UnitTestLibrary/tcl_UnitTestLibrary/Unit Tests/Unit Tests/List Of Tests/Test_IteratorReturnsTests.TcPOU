@@ -14,19 +14,6 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{f5cf7b1f-1614-4f76-ad11-f946fcc59d0a}">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[List.Clear();
-
-List.AddTest(Test0);
-List.AddTest(Test1);
-List.AddTest(Test2);
-List.AddTest(Test3);
-]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{ad0316aa-803b-48e0-9d3d-7922c261ce32}">
       <Declaration><![CDATA[METHOD RunTest
 VAR_INST
@@ -35,7 +22,14 @@ VAR_INST
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Iterator.Initialise(List);
+        <ST><![CDATA[List.Clear();
+
+List.AddTest(Test0);
+List.AddTest(Test1);
+List.AddTest(Test2);
+List.AddTest(Test3);
+
+Iterator.Initialise(List);
 Iterator.GetNext();
 Iterator.GetNext();
 

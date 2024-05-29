@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="FormatStringEx1" Id="{94212520-7cc2-0e3f-2a49-2a33eab3f902}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'hide'}
 FUNCTION INTERNAL FormatStringEx1 : T_MaxString
@@ -13,22 +13,20 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-
-FB_FormatString1(
-	sFormat:= Format, 
-	arg1:= F_STRING(arg1), 
-	arg2:= , 
-	arg3:= , 
-	arg4:= , 
-	arg5:= , 
-	arg6:= , 
-	arg7:= , 
-	arg8:= , 
-	arg9:= , 
-	arg10:= , 
-	bError=> , 
-	nErrId=> , 
-	sOut=> FormatStringEx1);
+FB_FormatString1(sFormat := Format,
+                 arg1    := F_STRING(arg1),
+                 arg2    :=,
+                 arg3    :=,
+                 arg4    :=,
+                 arg5    :=,
+                 arg6    :=,
+                 arg7    :=,
+                 arg8    :=,
+                 arg9    :=,
+                 arg10   :=,
+                 bError  =>,
+                 nErrId  =>,
+                 sOut    => FormatStringEx1);
 ]]></ST>
     </Implementation>
   </POU>

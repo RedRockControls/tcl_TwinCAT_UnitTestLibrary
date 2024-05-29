@@ -11,7 +11,7 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[ADSLOGSTR(msgCtrlMask := ADSLOG_MSGTYPE_STRING OR ADSLOG_MSGTYPE_ERROR OR ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_MSGBOX,
-          msgFmtStr   := FormatStringEx2('%s:$L%s', Source, Message),
+          msgFmtStr   := FormatStringEx2('%s : %s', Source, Message),
           strArg      := '');
 ]]></ST>
     </Implementation>

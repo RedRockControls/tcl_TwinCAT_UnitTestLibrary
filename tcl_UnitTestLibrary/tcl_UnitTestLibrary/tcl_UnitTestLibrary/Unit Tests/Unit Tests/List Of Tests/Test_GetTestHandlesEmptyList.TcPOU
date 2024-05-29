@@ -10,14 +10,6 @@ END_VAR
       <ST><![CDATA[
 ]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{f5a8aaee-52fb-4db1-98b0-740d059321f3}">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[List.Clear();
-]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{c6dfbf80-c24b-481a-868f-5d5f6bcb529b}">
       <Declaration><![CDATA[METHOD RunTest
 VAR_INST
@@ -25,7 +17,8 @@ VAR_INST
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TestNumber2 := List.GetTest(2);
+        <ST><![CDATA[List.Clear();
+TestNumber2 := List.GetTest(2);
 
 AssertIsTrue(Condition := (TestNumber2 = 0),
              Message   := 'Interface pointer TestNumber2 was not zero');

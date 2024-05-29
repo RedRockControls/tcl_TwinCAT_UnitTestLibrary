@@ -14,19 +14,6 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{c9fa5a59-5cb5-4d48-81c3-0d38228b2f7d}">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[List.Clear();
-
-List.AddTest(Test0);
-List.AddTest(Test1);
-List.AddTest(Test2);
-List.AddTest(Test3);
-]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{3edd45f6-0321-4408-83bc-ccbc93056a5f}">
       <Declaration><![CDATA[METHOD RunTest
 VAR_INST
@@ -35,7 +22,14 @@ VAR_INST
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Test2_InterfacePointer := Test2;
+        <ST><![CDATA[List.Clear();
+
+List.AddTest(Test0);
+List.AddTest(Test1);
+List.AddTest(Test2);
+List.AddTest(Test3);
+
+Test2_InterfacePointer := Test2;
 ReturnValue            := List.GetTest(2);
 
 AssertEquals_ANY(Expected := Test2_InterfacePointer,

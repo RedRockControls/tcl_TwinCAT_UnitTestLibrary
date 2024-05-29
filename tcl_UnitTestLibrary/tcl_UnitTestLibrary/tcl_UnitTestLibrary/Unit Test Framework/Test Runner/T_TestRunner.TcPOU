@@ -97,8 +97,8 @@ END_VAR
     sGetTest:
         IF TestIterator.HasMore() THEN
             CurrentTest := TestIterator.GetNext();
-            CurrentTest.InitBase();
-            F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Starting Test <%s>', CurrentTest.Name));
+            CurrentTest.Init();
+            F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Test Started <%s>', CurrentTest.Name));
             State := sRunTest;
         ELSE
             CurrentTest := 0;
@@ -111,11 +111,11 @@ END_VAR
         IF CurrentTest.TestCompleted THEN
             IF CurrentTest.TestFailed THEN
                 FailedTestsCount := FailedTestsCount + 1;
-                F_LogError(Source := TestSuiteName, Message := FormatStringEx1('Test failed <%s>', CurrentTest.Name));
+                F_LogError(Source := TestSuiteName, Message := FormatStringEx1('Test Failed  <%s>', CurrentTest.Name));
             ELSE
                 PassedTestsCount := PassedTestsCount + 1;
                 IF Verbose THEN
-                    F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Test passed <%s>', CurrentTest.Name));
+                    F_LogMessage(Source := TestSuiteName, Message := FormatStringEx1('Test Passed  <%s>', CurrentTest.Name));
                 END_IF
             END_IF
 

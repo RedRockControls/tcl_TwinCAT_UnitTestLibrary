@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.0.12.0</ProjectVersion>
+    <ProjectVersion>1.0.14.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,7 +30,9 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>Errors output to Message Box</Description>
+    <Description>T_UnitTestBase Init method deleted
+T_UnitTestBase IntBase renamed to Init, called on online change
+CheckForTimeout method added</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>

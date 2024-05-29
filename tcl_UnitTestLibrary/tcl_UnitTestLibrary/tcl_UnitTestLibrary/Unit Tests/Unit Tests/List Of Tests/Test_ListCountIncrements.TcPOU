@@ -10,20 +10,14 @@ END_VAR
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Method Name="Init" Id="{ee1b39e8-51aa-4aa4-a91c-b4dc3c05b481}">
-      <Declaration><![CDATA[METHOD Init
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[List.Clear();
-List.AddTest(Test0);
-]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="RunTest" Id="{7d69c6e7-5ecd-40f0-afb8-6c5dace0a11b}">
       <Declaration><![CDATA[METHOD RunTest
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AssertIsTrue(Condition := List.Count = 1,
+        <ST><![CDATA[List.Clear();
+List.AddTest(Test0);
+
+AssertIsTrue(Condition := List.Count = 1,
              Message   := 'List.Count was not 1');
 
 TestCompleted := TRUE;
