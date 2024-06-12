@@ -292,6 +292,24 @@ AssertEquals_ULINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="AssertIsFalse" Id="{f6a0ec80-6087-4cea-a1de-8b927e653068}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertIsFalse : BOOL
+VAR_INPUT
+    Condition : BOOL;
+    Message   : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Condition THEN
+    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    TestFailed := TRUE;
+    RETURN;
+END_IF
+
+AssertIsFalse := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="AssertIsTrue" Id="{cad875ec-dfd3-4726-81dd-a6735f47baa6}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD AssertIsTrue : BOOL
 VAR_INPUT
@@ -345,18 +363,9 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="Init" Id="{f9ce4d7f-44b0-4fb5-81b4-e0c1e331d42a}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD ABSTRACT Init
-VAR_INPUT
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="InitBase" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
+    <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
       <Declaration><![CDATA[{attribute 'call_after_init'}
-METHOD FINAL InitBase
+METHOD FINAL Init
 VAR
     StringSplitter : StringSplitter;
 END_VAR
@@ -376,7 +385,7 @@ State         := 0;
 TestFailed    := FALSE;
 TestCompleted := FALSE;
 
-Init();]]></ST>
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Name" Id="{0404f2a6-6d2f-43ce-8288-d9af3f97471a}" FolderPath="Properties\">
