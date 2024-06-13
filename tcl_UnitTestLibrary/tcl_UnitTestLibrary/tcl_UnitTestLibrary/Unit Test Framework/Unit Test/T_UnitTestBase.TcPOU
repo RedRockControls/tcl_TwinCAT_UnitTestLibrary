@@ -374,17 +374,17 @@ END_VAR
         <ST><![CDATA[StringSplitter.Init(Str := InstanceName, Delim1 := '.', Delim2 := '');
 
 IF StringSplitter.HasMore() THEN
-	Project := StringSplitter.GetNext();
-	Plc := StringSplitter.GetNext();
-	TestName := StringSplitter.GetRemainder();
+    Project  := StringSplitter.GetNext();
+    Plc      := StringSplitter.GetNext();
+    TestName := StringSplitter.GetRemainder();
 ELSE
-	TestName := 'Unknown Test';
+    TestName := 'Unknown Test';
 END_IF
 
 State         := 0;
 TestFailed    := FALSE;
 TestCompleted := FALSE;
-
+Retest        := FALSE;
 ]]></ST>
       </Implementation>
     </Method>
