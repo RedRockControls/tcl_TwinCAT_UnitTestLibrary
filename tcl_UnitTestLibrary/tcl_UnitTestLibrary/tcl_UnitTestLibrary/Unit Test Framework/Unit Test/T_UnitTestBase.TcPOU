@@ -1,8 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'call_after_init'}
-{attribute 'reflection'}
+    <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
 VAR
     {attribute 'instance-path'}
@@ -364,8 +363,8 @@ END_VAR
       </Get>
     </Property>
     <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[{attribute 'call_after_init'}
-METHOD FINAL Init
+      <Declaration><![CDATA[{attribute 'call_after_online_change_slot' := '1000'}
+METHOD Init
 VAR
     StringSplitter : StringSplitter;
 END_VAR
@@ -381,10 +380,10 @@ ELSE
     TestName := 'Unknown Test';
 END_IF
 
-State         := 0;
-TestFailed    := FALSE;
-TestCompleted := FALSE;
-Retest        := FALSE;
+State          := 0;
+_TestFailed    := FALSE;
+_TestCompleted := FALSE;
+Retest         := FALSE;
 ]]></ST>
       </Implementation>
     </Method>
