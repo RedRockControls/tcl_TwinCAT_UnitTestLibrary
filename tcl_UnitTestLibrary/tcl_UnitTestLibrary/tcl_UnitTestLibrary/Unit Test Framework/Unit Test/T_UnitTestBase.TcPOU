@@ -43,17 +43,20 @@ END_VAR
 
 IF Expected.TypeClass <> Actual.TypeClass THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 
 ELSIF Expected.diSize <> Actual.diSize THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 
 ELSIF ComparisonResult <> 0 THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -72,7 +75,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -91,7 +95,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -110,7 +115,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -129,7 +135,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -148,7 +155,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -168,7 +176,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -187,7 +196,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -207,7 +217,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -220,13 +231,14 @@ AssertEquals_REAL := TRUE;
 VAR_INPUT
     Expected : T_MaxString;
     Actual   : T_MaxString;
-    Message   : T_MaxString;
+    Message  : T_MaxString;
 END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -245,7 +257,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -264,7 +277,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -283,7 +297,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -301,7 +316,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF Condition THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -319,7 +335,8 @@ END_VAR
       <Implementation>
         <ST><![CDATA[IF NOT Condition THEN
     F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed := TRUE;
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
     RETURN;
 END_IF
 
@@ -331,7 +348,7 @@ AssertIsTrue := TRUE;
       <Declaration><![CDATA[METHOD AwaitConditionIsTrue : BOOL
 VAR_INPUT
     Condition : BOOL;
-	MaxCycles : UDINT;
+    MaxCycles : UDINT;
     Message   : T_MaxString;
 END_VAR
 ]]></Declaration>
@@ -341,6 +358,7 @@ END_VAR
     IF CycleCount > MaxCycles THEN
         F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
         TestFailed           := TRUE;
+        TestCompleted        := TRUE;
         AwaitConditionIsTrue := TRUE;
     END_IF
     RETURN;
@@ -362,6 +380,30 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
+    <Method Name="Fail" Id="{b8854fe0-2fa9-414f-8edf-3f9ac1e142d9}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Fail
+VAR_INPUT
+    Message : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[F_LogError(TestName, FormatStringEx1('Test Failed - %s', Message));
+TestFailed    := TRUE;
+TestCompleted := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{d715a8ed-6e23-43db-9a26-7d5bf7af1708}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[THIS^.Init();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
       <Declaration><![CDATA[{attribute 'call_after_online_change_slot' := '1000'}
 METHOD Init
@@ -405,7 +447,8 @@ END_VAR
 METHOD ABSTRACT RunTest
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="TestCompleted" Id="{2c6255e4-e476-4dee-8897-fed2ded26b5a}" FolderPath="Properties\">
