@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-FUNCTION_BLOCK ABSTRACT T_UnitTestBase IMPLEMENTS I_UnitTest
+FUNCTION_BLOCK ABSTRACT T_UnitTestBase //IMPLEMENTS I_UnitTest
 VAR
     {attribute 'instance-path'}
     {attribute 'no_init'}
@@ -71,10 +71,20 @@ VAR_INPUT
     Actual   : BOOL;
     Message  : T_MaxString;
 END_VAR
+VAR
+    ExpectedAsString : STRING;
+    ActualAsString   : STRING;
+END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+	ExpectedAsString := BOOL_TO_STRING(Expected);
+	ActualAsString := BOOL_TO_STRING(Actual);
+    F_LogError(TestName,
+               FormatString3('%s: expected=%s, actual=%s',
+                             F_STRING(Message),
+                             F_STRINGEX(ExpectedAsString),
+                             F_STRINGEX(ActualAsString)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -94,7 +104,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=0x%.2X, actual=0x%.2X',
+                             F_STRING(Message),
+                             F_BYTE(Expected),
+                             F_BYTE(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -114,7 +128,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_DINT(Expected),
+                             F_DINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -134,7 +152,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_INT(Expected),
+                             F_INT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -154,7 +176,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_LINT(Expected),
+                             F_LINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -175,7 +201,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected= %.3f, actual= %.3f',
+                             F_STRING(Message),
+                             F_LREAL(Expected),
+                             F_LREAL(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -195,7 +225,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_ULINT(Expected),
+                             F_ULINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -216,7 +250,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%.3f, actual=%.3f',
+                             F_STRING(Message),
+                             F_REAL(Expected),
+                             F_REAL(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -236,7 +274,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%s, actual=%s',
+                             F_STRING(Message),
+                             F_STRING(Expected),
+                             F_STRING(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -256,7 +298,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_UDINT(Expected),
+                             F_UDINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -276,7 +322,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_UINT(Expected),
+                             F_UINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -296,7 +346,11 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_ULINT(Expected),
+                             F_ULINT(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -315,7 +369,9 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Condition THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString1('%s: expected=FALSE, actual=TRUE',
+                             F_STRING(Message)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -334,7 +390,9 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Condition THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
+    F_LogError(TestName,
+               FormatString1('%s: expected=TRUE, actual=FALSE',
+                             F_STRING(Message)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
@@ -344,42 +402,6 @@ AssertIsTrue := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AwaitConditionIsTrue" Id="{0f9e6b23-9d8e-408b-b421-7fec7bed5d6f}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AwaitConditionIsTrue : BOOL
-VAR_INPUT
-    Condition : BOOL;
-    MaxCycles : UDINT;
-    Message   : T_MaxString;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF NOT Condition THEN
-    CycleCount := CycleCount + 1; // assumes cycle count is reset before calling this method
-    IF CycleCount > MaxCycles THEN
-        F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-        TestFailed           := TRUE;
-        TestCompleted        := TRUE;
-        AwaitConditionIsTrue := TRUE;
-    END_IF
-    RETURN;
-ELSE
-    CycleCount           := 0;
-    AwaitConditionIsTrue := TRUE;
-END_IF
-]]></ST>
-      </Implementation>
-    </Method>
-    <Property Name="BaseClass" Id="{b4d027a7-046f-48d1-8468-ee31a4969371}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY BaseClass : I_UnitTest]]></Declaration>
-      <Get Name="Get" Id="{70254247-b8af-4d35-af04-a3ea68849a8d}">
-        <Declaration><![CDATA[VAR
-END_VAR
-]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[BaseClass := THIS^;]]></ST>
-        </Implementation>
-      </Get>
-    </Property>
     <Method Name="Fail" Id="{b8854fe0-2fa9-414f-8edf-3f9ac1e142d9}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Fail
 VAR_INPUT
@@ -412,17 +434,21 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[StringSplitter.Init(Str := InstanceName, Delim1 := '.', Delim2 := '');
+        <ST><![CDATA[StringSplitter.Init(Str    := InstanceName,
+                    Delim1 := '.',
+                    Delim2 := '');
 
 IF StringSplitter.HasMore() THEN
-    Project  := StringSplitter.GetNext();
-    Plc      := StringSplitter.GetNext();
-    TestName := StringSplitter.GetRemainder();
-ELSE
-    TestName := 'Unknown Test';
+    Project := StringSplitter.GetNext();
+    Plc     := StringSplitter.GetNext();
 END_IF
 
+WHILE StringSplitter.HasMore() DO
+    TestName := StringSplitter.GetNext(); // gets last chunk, which is Test Name
+END_WHILE
+
 State          := 0;
+CycleCount     := 0;
 _TestFailed    := FALSE;
 _TestCompleted := FALSE;
 Retest         := FALSE;
