@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
-FUNCTION_BLOCK ABSTRACT T_UnitTestBase //IMPLEMENTS I_UnitTest
+FUNCTION_BLOCK ABSTRACT T_UnitTestBase
 VAR
     {attribute 'instance-path'}
     {attribute 'no_init'}
@@ -228,8 +228,8 @@ END_VAR
     F_LogError(TestName,
                FormatString3('%s: expected=%d, actual=%d',
                              F_STRING(Message),
-                             F_ULINT(Expected),
-                             F_ULINT(Actual)));
+                             F_PVOID(Expected),
+                             F_PVOID(Actual)));
     TestFailed    := TRUE;
     TestCompleted := TRUE;
     RETURN;
