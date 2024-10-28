@@ -26,7 +26,7 @@ END_VAR
     <Folder Name="Methods" Id="{a5772276-00c5-43a4-85c1-e780c7c7de3b}" />
     <Folder Name="Properties" Id="{eb7e9c1f-ae66-405a-820c-688b53e1a9a9}" />
     <Method Name="AssertEquals_ANY" Id="{8c39ac6a-e3a4-4e64-8b71-f758c94e977f}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_ANY : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_ANY : BOOL
 VAR_INPUT
     Expected : ANY;
     Actual   : ANY;
@@ -65,7 +65,7 @@ AssertEquals_ANY := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_BOOL" Id="{9b94f5a5-3f4f-4415-b23b-6241a645ab07}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_BOOL : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_BOOL : BOOL
 VAR_INPUT
     Expected : BOOL;
     Actual   : BOOL;
@@ -95,7 +95,7 @@ AssertEquals_BOOL := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_BYTE" Id="{08150b43-4ff5-4e6d-953b-1154960624e2}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_BYTE : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_BYTE : BOOL
 VAR_INPUT
     Expected : BYTE;
     Actual   : BYTE;
@@ -119,7 +119,7 @@ AssertEquals_BYTE := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_DINT" Id="{eb3056ea-2f26-4cff-a482-a3994eed33c8}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_DINT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_DINT : BOOL
 VAR_INPUT
     Expected : DINT;
     Actual   : DINT;
@@ -143,7 +143,7 @@ AssertEquals_DINT := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_INT" Id="{42545341-2d84-46fc-9339-3e8a2b1e71b8}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_INT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_INT : BOOL
 VAR_INPUT
     Expected : INT;
     Actual   : INT;
@@ -167,7 +167,7 @@ AssertEquals_INT := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_LINT" Id="{680dbc81-25a4-4297-bce7-fc7a1394820c}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_LINT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_LINT : BOOL
 VAR_INPUT
     Expected : LINT;
     Actual   : LINT;
@@ -191,7 +191,7 @@ AssertEquals_LINT := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_LREAL" Id="{0e4ee858-c05e-426c-a0eb-481c1ac21bf1}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_LREAL : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_LREAL : BOOL
 VAR_INPUT
     Expected : LREAL;
     Actual   : LREAL;
@@ -216,7 +216,7 @@ AssertEquals_LREAL := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_PVOID" Id="{05e72387-7114-492d-85df-e3702e9e13b2}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_PVOID : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_PVOID : BOOL
 VAR_INPUT
     Expected : PVOID;
     Actual   : PVOID;
@@ -240,7 +240,7 @@ AssertEquals_PVOID := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_REAL" Id="{65d8a8a1-9a76-4554-b6d5-1a0075d640fb}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_REAL : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_REAL : BOOL
 VAR_INPUT
     Expected : REAL;
     Actual   : REAL;
@@ -265,7 +265,7 @@ AssertEquals_REAL := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_STRING" Id="{922f5d37-eaf4-494b-9220-811e46507baa}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_STRING : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_STRING : BOOL
 VAR_INPUT
     Expected : T_MaxString;
     Actual   : T_MaxString;
@@ -289,7 +289,7 @@ AssertEquals_STRING := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_UDINT" Id="{b4316d77-900c-4326-882d-ca3aafbaea09}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_UDINT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_UDINT : BOOL
 VAR_INPUT
     Expected : UDINT;
     Actual   : UDINT;
@@ -313,7 +313,7 @@ AssertEquals_UDINT := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_UINT" Id="{eae747e6-05b0-4235-851e-2602e98dde70}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_UINT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_UINT : BOOL
 VAR_INPUT
     Expected : UINT;
     Actual   : UINT;
@@ -337,7 +337,7 @@ AssertEquals_UINT := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertEquals_ULINT" Id="{4c66f248-c3df-4371-8d92-3988dcc92ed9}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertEquals_ULINT : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_ULINT : BOOL
 VAR_INPUT
     Expected : ULINT;
     Actual   : ULINT;
@@ -360,8 +360,32 @@ AssertEquals_ULINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Method Name="AssertEquals_USINT" Id="{a6a5ddb3-a61c-40a5-bb7d-b28b9f101523}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_USINT : BOOL
+VAR_INPUT
+    Expected : USINT;
+    Actual   : USINT;
+    Message  : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Expected <> Actual THEN
+    F_LogError(TestName,
+               FormatString3('%s: expected=%d, actual=%d',
+                             F_STRING(Message),
+                             F_USINT(Expected),
+                             F_USINT(Actual)));
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
+    RETURN;
+END_IF
+
+AssertEquals_USINT := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="AssertIsFalse" Id="{f6a0ec80-6087-4cea-a1de-8b927e653068}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertIsFalse : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertIsFalse : BOOL
 VAR_INPUT
     Condition : BOOL;
     Message   : T_MaxString;
@@ -382,7 +406,7 @@ AssertIsFalse := TRUE;
       </Implementation>
     </Method>
     <Method Name="AssertIsTrue" Id="{cad875ec-dfd3-4726-81dd-a6735f47baa6}" FolderPath="Methods\">
-      <Declaration><![CDATA[METHOD AssertIsTrue : BOOL
+      <Declaration><![CDATA[METHOD PROTECTED AssertIsTrue : BOOL
 VAR_INPUT
     Condition : BOOL;
     Message   : T_MaxString;

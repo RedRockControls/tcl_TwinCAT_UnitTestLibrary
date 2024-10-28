@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.1.2.0</ProjectVersion>
+    <ProjectVersion>1.1.3.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,7 +30,7 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>Don't show masseage box on error</Description>
+    <Description>AssertEquals_USINT added</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
