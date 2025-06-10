@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT T_UnitTestBase
@@ -61,6 +61,52 @@ ELSIF ComparisonResult <> 0 THEN
 END_IF
 
 AssertEquals_ANY := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AssertEquals_BLOB" Id="{70e85b6e-d3ef-4918-85de-6a67d793469f}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD AssertEquals_BLOB : BOOL
+VAR_INPUT
+    Expected : ANY;
+    Actual   : ANY;
+    Message  : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF
+    Expected.diSize <> Actual.diSize
+THEN
+    F_LogError(TestName,
+               FormatString1('%s: Sizes differ',
+                             F_STRING(Message)));
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
+    RETURN;
+
+ELSIF
+    Expected.TypeClass <> Actual.TypeClass
+THEN
+    F_LogError(TestName,
+               FormatString1('%s: Type classes differ',
+                             F_STRING(Message)));
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
+    RETURN;
+
+ELSIF
+    MEMCMP(pBuf1 := Expected.pValue,
+           pBuf2 := Actual.pValue,
+           n     := DINT_TO_UDINT(Actual.diSize)) <>  0
+THEN
+    F_LogError(TestName,
+               FormatString1('%s: Contents differ',
+                             F_STRING(Message)));
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
+    RETURN;
+ELSE
+    AssertEquals_BLOB := TRUE;
+END_IF
 ]]></ST>
       </Implementation>
     </Method>
@@ -163,6 +209,28 @@ END_VAR
 END_IF
 
 AssertEquals_INT := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AssertEquals_Interface" Id="{d121d7ab-689c-424b-9558-eff187bbc7c9}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD PROTECTED AssertEquals_Interface : BOOL
+VAR_INPUT
+    Expected : __SYSTEM.IQueryInterface;
+    Actual   : __SYSTEM.IQueryInterface;
+    Message  : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Expected <> Actual THEN
+    F_LogError(TestName,
+               FormatString1('%s',
+                             F_STRING(Message)));
+    TestFailed    := TRUE;
+    TestCompleted := TRUE;
+    RETURN;
+END_IF
+
+AssertEquals_Interface := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
