@@ -79,6 +79,10 @@ END_VAR
     TaskTime := F_TaskTime();
 END_IF
 
+IF State > sInit THEN
+	RunTests := FALSE; // avoid re-triggering tests while they are running
+END_IF
+
 CASE State OF
     sInit:
         IF F_ReadFlag(RunTests) THEN

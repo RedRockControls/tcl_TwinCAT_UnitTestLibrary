@@ -9,12 +9,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("BAE Actuator Test Rig")]
+[assembly: AssemblyTitle("Unit Test Library Test Runner")]
 [assembly: AssemblyDescription("BAE Actuator Test Rig")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Red Rock Controls")]
-[assembly: AssemblyProduct("Gap Controller")]
-[assembly: AssemblyCopyright("Copyright 2015")]
+[assembly: AssemblyCompany("Unit Test Library Test Runner")]
+[assembly: AssemblyProduct("Unit Test Library")]
+[assembly: AssemblyCopyright("Copyright 2026")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -28,4 +28,6 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can use the default the Revision and 
 // Build Numbers by using the '*' as shown below:
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.2.3.0")]
+[assembly: AssemblyFileVersion("1.2.3.0")]
+

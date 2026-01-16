@@ -46,18 +46,18 @@ namespace GapControllerHmi
             TestRunner.RunTests.WriteToPLC();
         }
 
-        private void EnterDoubleValue(T_LREAL PlcValue, string CurrentValue)
-        {
-            Keypad.TfrmTextPad kp = new Keypad.TfrmTextPad();
+        //private void EnterDoubleValue(T_LREAL PlcValue, string CurrentValue)
+        //{
+        //    Keypad.TfrmTextPad kp = new Keypad.TfrmTextPad();
 
-            kp.EnteredText = CurrentValue;
-            if (kp.ShowDialog(this) == DialogResult.OK)
-            {
-                double result;
-                if (double.TryParse(kp.EnteredText, out result))
-                    PlcValue.Value = result;
-            }
-        }
+        //    kp.EnteredText = CurrentValue;
+        //    if (kp.ShowDialog(this) == DialogResult.OK)
+        //    {
+        //        double result;
+        //        if (double.TryParse(kp.EnteredText, out result))
+        //            PlcValue.Value = result;
+        //    }
+        //}
 
         private void btnExit_Click(object sender, EventArgs e)
         {
