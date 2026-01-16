@@ -9,23 +9,28 @@ VAR
     {attribute 'analysis' := '-33'} // Inhibit unused variable warning
     InstanceName : T_MaxString;     // Initialised with the instance name
 
-    Project  : T_MaxString;
-    Plc      : T_MaxString;
-    TestName : T_MaxString;
+    Project    : T_MaxString;
+    Plc        : T_MaxString;
+    TestName   : T_MaxString;
+    SourceInfo : FB_TcSourceInfo := (sName := 'Unknown');
 
-    _TestCompleted : BOOL;
-    _TestFailed    : BOOL;
-    State          : INT;
-    CycleCount     : UDINT;
-    Retest         : BOOL;
+    _ElapsedTime : LREAL;
+    _TestStatus  : E_TestStatus;
+    _Enabled     : BOOL := TRUE;
+    _Failed      : BOOL;
+    _Completed   : BOOL;
+    State        : INT;
+
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[]]></ST>
     </Implementation>
-    <Folder Name="Methods" Id="{a5772276-00c5-43a4-85c1-e780c7c7de3b}" />
+    <Folder Name="Methods" Id="{a5772276-00c5-43a4-85c1-e780c7c7de3b}">
+      <Folder Name="Assertions" Id="{eeb32758-3083-4449-8104-3d7cd077ec0c}" />
+    </Folder>
     <Folder Name="Properties" Id="{eb7e9c1f-ae66-405a-820c-688b53e1a9a9}" />
-    <Method Name="AssertEquals_ANY" Id="{8c39ac6a-e3a4-4e64-8b71-f758c94e977f}" FolderPath="Methods\">
+    <Method Name="AssertEquals_ANY" Id="{8c39ac6a-e3a4-4e64-8b71-f758c94e977f}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_ANY : BOOL
 VAR_INPUT
     Expected : ANY;
@@ -42,21 +47,18 @@ END_VAR
                            n     := DINT_TO_UDINT(Actual.diSize));
 
 IF Expected.TypeClass <> Actual.TypeClass THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    DefaultLogger.LogError(SourceInfo, FormatStringEx1('Assertion Failed - %s', Message));
+    _Failed := TRUE;
     RETURN;
 
 ELSIF Expected.diSize <> Actual.diSize THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    DefaultLogger.LogError(SourceInfo, FormatStringEx1('Assertion Failed - %s', Message));
+    _Failed := TRUE;
     RETURN;
 
 ELSIF ComparisonResult <> 0 THEN
-    F_LogError(TestName, FormatStringEx1('Assertion Failed - %s', Message));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    DefaultLogger.LogError(SourceInfo, FormatStringEx1('Assertion Failed - %s', Message));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -64,7 +66,7 @@ AssertEquals_ANY := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_BLOB" Id="{70e85b6e-d3ef-4918-85de-6a67d793469f}" FolderPath="Methods\">
+    <Method Name="AssertEquals_BLOB" Id="{70e85b6e-d3ef-4918-85de-6a67d793469f}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD AssertEquals_BLOB : BOOL
 VAR_INPUT
     Expected : ANY;
@@ -76,33 +78,31 @@ END_VAR
         <ST><![CDATA[IF
     Expected.diSize <> Actual.diSize
 THEN
-    F_LogError(TestName,
-               FormatString1('%s: Sizes differ',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s: Sizes differ',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 
 ELSIF
     Expected.TypeClass <> Actual.TypeClass
 THEN
-    F_LogError(TestName,
-               FormatString1('%s: Type classes differ',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s: Type classes differ',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 
 ELSIF
-    MEMCMP(pBuf1 := Expected.pValue,
+    MEMCMP(pBuf1 := Expected.pValue, // TODO - convert to function
            pBuf2 := Actual.pValue,
-           n     := DINT_TO_UDINT(Actual.diSize)) <>  0
+           n     := DINT_TO_UDINT(Actual.diSize)) <>
+    0
 THEN
-    F_LogError(TestName,
-               FormatString1('%s: Contents differ',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s: Contents differ',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 ELSE
     AssertEquals_BLOB := TRUE;
@@ -110,7 +110,7 @@ END_IF
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_BOOL" Id="{9b94f5a5-3f4f-4415-b23b-6241a645ab07}" FolderPath="Methods\">
+    <Method Name="AssertEquals_BOOL" Id="{9b94f5a5-3f4f-4415-b23b-6241a645ab07}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_BOOL : BOOL
 VAR_INPUT
     Expected : BOOL;
@@ -124,15 +124,14 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-	ExpectedAsString := BOOL_TO_STRING(Expected);
-	ActualAsString := BOOL_TO_STRING(Actual);
-    F_LogError(TestName,
-               FormatString3('%s: expected=%s, actual=%s',
-                             F_STRING(Message),
-                             F_STRINGEX(ExpectedAsString),
-                             F_STRINGEX(ActualAsString)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    ExpectedAsString := BOOL_TO_STRING(Expected);
+    ActualAsString   := BOOL_TO_STRING(Actual);
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%s, actual=%s',
+                                                         F_STRING(Message),
+                                                         F_STRINGEX(ExpectedAsString),
+                                                         F_STRINGEX(ActualAsString)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -140,7 +139,7 @@ AssertEquals_BOOL := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_BYTE" Id="{08150b43-4ff5-4e6d-953b-1154960624e2}" FolderPath="Methods\">
+    <Method Name="AssertEquals_BYTE" Id="{08150b43-4ff5-4e6d-953b-1154960624e2}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_BYTE : BOOL
 VAR_INPUT
     Expected : BYTE;
@@ -150,13 +149,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=0x%.2X, actual=0x%.2X',
-                             F_STRING(Message),
-                             F_BYTE(Expected),
-                             F_BYTE(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=0x%.2X, actual=0x%.2X',
+                                                         F_STRING(Message),
+                                                         F_BYTE(Expected),
+                                                         F_BYTE(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -164,7 +162,7 @@ AssertEquals_BYTE := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_DINT" Id="{eb3056ea-2f26-4cff-a482-a3994eed33c8}" FolderPath="Methods\">
+    <Method Name="AssertEquals_DINT" Id="{eb3056ea-2f26-4cff-a482-a3994eed33c8}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_DINT : BOOL
 VAR_INPUT
     Expected : DINT;
@@ -174,13 +172,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_DINT(Expected),
-                             F_DINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_DINT(Expected),
+                                                         F_DINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -188,7 +185,7 @@ AssertEquals_DINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_INT" Id="{42545341-2d84-46fc-9339-3e8a2b1e71b8}" FolderPath="Methods\">
+    <Method Name="AssertEquals_INT" Id="{42545341-2d84-46fc-9339-3e8a2b1e71b8}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_INT : BOOL
 VAR_INPUT
     Expected : INT;
@@ -198,13 +195,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_INT(Expected),
-                             F_INT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('Failed - %s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_INT(Expected),
+                                                         F_INT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -212,7 +208,7 @@ AssertEquals_INT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_Interface" Id="{d121d7ab-689c-424b-9558-eff187bbc7c9}" FolderPath="Methods\">
+    <Method Name="AssertEquals_Interface" Id="{d121d7ab-689c-424b-9558-eff187bbc7c9}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_Interface : BOOL
 VAR_INPUT
     Expected : __SYSTEM.IQueryInterface;
@@ -222,11 +218,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString1('%s',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -234,7 +229,7 @@ AssertEquals_Interface := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_LINT" Id="{680dbc81-25a4-4297-bce7-fc7a1394820c}" FolderPath="Methods\">
+    <Method Name="AssertEquals_LINT" Id="{680dbc81-25a4-4297-bce7-fc7a1394820c}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_LINT : BOOL
 VAR_INPUT
     Expected : LINT;
@@ -244,13 +239,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_LINT(Expected),
-                             F_LINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_LINT(Expected),
+                                                         F_LINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -258,7 +252,7 @@ AssertEquals_LINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_LREAL" Id="{0e4ee858-c05e-426c-a0eb-481c1ac21bf1}" FolderPath="Methods\">
+    <Method Name="AssertEquals_LREAL" Id="{0e4ee858-c05e-426c-a0eb-481c1ac21bf1}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_LREAL : BOOL
 VAR_INPUT
     Expected : LREAL;
@@ -269,13 +263,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected= %.3f, actual= %.3f',
-                             F_STRING(Message),
-                             F_LREAL(Expected),
-                             F_LREAL(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected= %.3f, actual= %.3f',
+                                                         F_STRING(Message),
+                                                         F_LREAL(Expected),
+                                                         F_LREAL(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -283,7 +276,7 @@ AssertEquals_LREAL := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_PVOID" Id="{05e72387-7114-492d-85df-e3702e9e13b2}" FolderPath="Methods\">
+    <Method Name="AssertEquals_PVOID" Id="{05e72387-7114-492d-85df-e3702e9e13b2}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_PVOID : BOOL
 VAR_INPUT
     Expected : PVOID;
@@ -293,13 +286,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_PVOID(Expected),
-                             F_PVOID(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_PVOID(Expected),
+                                                         F_PVOID(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -307,7 +299,7 @@ AssertEquals_PVOID := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_REAL" Id="{65d8a8a1-9a76-4554-b6d5-1a0075d640fb}" FolderPath="Methods\">
+    <Method Name="AssertEquals_REAL" Id="{65d8a8a1-9a76-4554-b6d5-1a0075d640fb}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_REAL : BOOL
 VAR_INPUT
     Expected : REAL;
@@ -318,13 +310,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF ABS(Expected - Actual) > Delta THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%.3f, actual=%.3f',
-                             F_STRING(Message),
-                             F_REAL(Expected),
-                             F_REAL(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%.3f, actual=%.3f',
+                                                         F_STRING(Message),
+                                                         F_REAL(Expected),
+                                                         F_REAL(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -332,7 +323,7 @@ AssertEquals_REAL := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_STRING" Id="{922f5d37-eaf4-494b-9220-811e46507baa}" FolderPath="Methods\">
+    <Method Name="AssertEquals_STRING" Id="{922f5d37-eaf4-494b-9220-811e46507baa}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_STRING : BOOL
 VAR_INPUT
     Expected : T_MaxString;
@@ -342,13 +333,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%s, actual=%s',
-                             F_STRING(Message),
-                             F_STRING(Expected),
-                             F_STRING(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%s, actual=%s',
+                                                         F_STRING(Message),
+                                                         F_STRING(Expected),
+                                                         F_STRING(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -356,7 +346,7 @@ AssertEquals_STRING := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_UDINT" Id="{b4316d77-900c-4326-882d-ca3aafbaea09}" FolderPath="Methods\">
+    <Method Name="AssertEquals_UDINT" Id="{b4316d77-900c-4326-882d-ca3aafbaea09}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_UDINT : BOOL
 VAR_INPUT
     Expected : UDINT;
@@ -366,13 +356,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_UDINT(Expected),
-                             F_UDINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_UDINT(Expected),
+                                                         F_UDINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -380,7 +369,7 @@ AssertEquals_UDINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_UINT" Id="{eae747e6-05b0-4235-851e-2602e98dde70}" FolderPath="Methods\">
+    <Method Name="AssertEquals_UINT" Id="{eae747e6-05b0-4235-851e-2602e98dde70}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_UINT : BOOL
 VAR_INPUT
     Expected : UINT;
@@ -390,13 +379,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_UINT(Expected),
-                             F_UINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_UINT(Expected),
+                                                         F_UINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -404,7 +392,7 @@ AssertEquals_UINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_ULINT" Id="{4c66f248-c3df-4371-8d92-3988dcc92ed9}" FolderPath="Methods\">
+    <Method Name="AssertEquals_ULINT" Id="{4c66f248-c3df-4371-8d92-3988dcc92ed9}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_ULINT : BOOL
 VAR_INPUT
     Expected : ULINT;
@@ -414,13 +402,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_ULINT(Expected),
-                             F_ULINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_ULINT(Expected),
+                                                         F_ULINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -428,7 +415,7 @@ AssertEquals_ULINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertEquals_USINT" Id="{a6a5ddb3-a61c-40a5-bb7d-b28b9f101523}" FolderPath="Methods\">
+    <Method Name="AssertEquals_USINT" Id="{a6a5ddb3-a61c-40a5-bb7d-b28b9f101523}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_USINT : BOOL
 VAR_INPUT
     Expected : USINT;
@@ -438,13 +425,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
-    F_LogError(TestName,
-               FormatString3('%s: expected=%d, actual=%d',
-                             F_STRING(Message),
-                             F_USINT(Expected),
-                             F_USINT(Actual)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString3('%s: expected=%d, actual=%d',
+                                                         F_STRING(Message),
+                                                         F_USINT(Expected),
+                                                         F_USINT(Actual)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -452,7 +438,7 @@ AssertEquals_USINT := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertIsFalse" Id="{f6a0ec80-6087-4cea-a1de-8b927e653068}" FolderPath="Methods\">
+    <Method Name="AssertIsFalse" Id="{f6a0ec80-6087-4cea-a1de-8b927e653068}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertIsFalse : BOOL
 VAR_INPUT
     Condition : BOOL;
@@ -461,11 +447,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Condition THEN
-    F_LogError(TestName,
-               FormatString1('%s: expected=FALSE, actual=TRUE',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s: expected=FALSE, actual=TRUE',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -473,7 +458,7 @@ AssertIsFalse := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
-    <Method Name="AssertIsTrue" Id="{cad875ec-dfd3-4726-81dd-a6735f47baa6}" FolderPath="Methods\">
+    <Method Name="AssertIsTrue" Id="{cad875ec-dfd3-4726-81dd-a6735f47baa6}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertIsTrue : BOOL
 VAR_INPUT
     Condition : BOOL;
@@ -482,11 +467,10 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT Condition THEN
-    F_LogError(TestName,
-               FormatString1('%s: expected=TRUE, actual=FALSE',
-                             F_STRING(Message)));
-    TestFailed    := TRUE;
-    TestCompleted := TRUE;
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           FormatString1('%s: expected=TRUE, actual=FALSE',
+                                                         F_STRING(Message)));
+    _Failed := TRUE;
     RETURN;
 END_IF
 
@@ -494,6 +478,57 @@ AssertIsTrue := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Completed" Id="{d828ece8-d813-4d50-87c0-0cbab1afdf99}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Completed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ea304093-2402-4032-bd50-ef3eb00b2637}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Completed := _Completed;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="ElapsedTime" Id="{7d3a9c5e-3f32-4af8-badc-f130c692e726}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ElapsedTime : LREAL]]></Declaration>
+      <Get Name="Get" Id="{2fcdb8d0-266d-4e71-93d4-297df7ef5e88}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[ElapsedTime := _ElapsedTime;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{37a8100d-2d6e-4460-8468-86ec7361d34a}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_ElapsedTime := ElapsedTime;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
+    <Property Name="Enabled" Id="{480fbadd-0a04-4e69-89cf-ef703e1a9b73}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Enabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{b84ac2af-e26d-44d3-a0e3-db979160399a}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Enabled := _Enabled;]]></ST>
+        </Implementation>
+      </Get>
+      <Set Name="Set" Id="{544f780c-9634-4796-ac1a-8edf0f7c9e9a}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[_Enabled := Enabled;]]></ST>
+        </Implementation>
+      </Set>
+    </Property>
     <Method Name="Fail" Id="{b8854fe0-2fa9-414f-8edf-3f9ac1e142d9}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD Fail
 VAR_INPUT
@@ -501,30 +536,31 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[F_LogError(TestName, FormatStringEx1('Test Failed - %s', Message));
-TestFailed    := TRUE;
-TestCompleted := TRUE;
+        <ST><![CDATA[tcl_BaseClasses.DefaultLogger.LogError(SourceInfo, FormatString1('Test Failure - %s', F_STRING(Message)));
+_Failed := TRUE;
 ]]></ST>
       </Implementation>
     </Method>
+    <Property Name="Failed" Id="{45937e00-55cf-471c-a4a9-2b13315de6d5}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Failed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f8bcaf07-093c-4182-b95e-725756daa58c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Failed := _Failed;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Method Name="FB_init" Id="{d715a8ed-6e23-43db-9a26-7d5bf7af1708}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
 	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
 	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
 END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[THIS^.Init();]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="Init" Id="{c6c815cd-69fa-4977-953d-d0e1df3e2361}" FolderPath="Methods\">
-      <Declaration><![CDATA[{attribute 'call_after_online_change_slot' := '1000'}
-METHOD Init
 VAR
-    StringSplitter : StringSplitter;
-END_VAR
-]]></Declaration>
+	StringSplitter : StringSplitter;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[StringSplitter.Init(Str    := InstanceName,
                     Delim1 := '.',
@@ -539,16 +575,28 @@ WHILE StringSplitter.HasMore() DO
     TestName := StringSplitter.GetNext(); // gets last chunk, which is Test Name
 END_WHILE
 
-State          := 0;
-CycleCount     := 0;
-_TestFailed    := FALSE;
-_TestCompleted := FALSE;
-Retest         := FALSE;
+SourceInfo.sName := TestName;
+
+Init();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{0733d3e7-ab61-4196-99e7-90f489cfb23c}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_ElapsedTime := 0.0;
+_TestStatus  := E_TestStatus.Unknown;
+_Failed      := FALSE;
+_Completed   := FALSE;
+State        := 0;
 ]]></ST>
       </Implementation>
     </Method>
     <Property Name="Name" Id="{0404f2a6-6d2f-43ce-8288-d9af3f97471a}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY Name : T_MaxString
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Name : T_MaxString
 ]]></Declaration>
       <Get Name="Get" Id="{23ff53f7-40cf-4dbc-ae96-089bca3dca34}">
         <Declaration><![CDATA[VAR
@@ -569,35 +617,23 @@ METHOD ABSTRACT RunTest
 ]]></ST>
       </Implementation>
     </Method>
-    <Property Name="TestCompleted" Id="{2c6255e4-e476-4dee-8897-fed2ded26b5a}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TestCompleted : BOOL]]></Declaration>
-      <Get Name="Get" Id="{b3c15a73-0247-4742-9a74-f07336c20bf4}">
-        <Declaration><![CDATA[PUBLIC
+    <Property Name="TestStatus" Id="{ea06a741-2041-4d5a-a48d-ec305e5d3a7e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY TestStatus : E_TestStatus]]></Declaration>
+      <Get Name="Get" Id="{e1856a3e-7ca0-44a7-be2c-dc79563c443f}">
+        <Declaration><![CDATA[VAR
+END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[TestCompleted := _TestCompleted;]]></ST>
+          <ST><![CDATA[TestStatus := _TestStatus;]]></ST>
         </Implementation>
       </Get>
-      <Set Name="Set" Id="{ad11a1d3-bb4b-4f00-b20e-3b78d2e07e57}">
-        <Declaration><![CDATA[PROTECTED
+      <Set Name="Set" Id="{f6a20cfe-9f57-48bb-b56d-bf7a17d52b13}">
+        <Declaration><![CDATA[
+VAR
+END_VAR
 ]]></Declaration>
         <Implementation>
-          <ST><![CDATA[_TestCompleted := TestCompleted;]]></ST>
-        </Implementation>
-      </Set>
-    </Property>
-    <Property Name="TestFailed" Id="{00cc0457-806b-4c3e-b342-8020d5b41549}" FolderPath="Properties\">
-      <Declaration><![CDATA[PROPERTY TestFailed : BOOL]]></Declaration>
-      <Get Name="Get" Id="{aa3f4237-7e3a-4059-b45a-a9bca92ca4d4}">
-        <Declaration><![CDATA[PUBLIC]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[TestFailed := _TestFailed;]]></ST>
-        </Implementation>
-      </Get>
-      <Set Name="Set" Id="{2ab0aa07-ac71-4498-8066-a1ebdcc81657}">
-        <Declaration><![CDATA[PROTECTED]]></Declaration>
-        <Implementation>
-          <ST><![CDATA[_TestFailed := TestFailed;]]></ST>
+          <ST><![CDATA[_TestStatus := TestStatus;]]></ST>
         </Implementation>
       </Set>
     </Property>

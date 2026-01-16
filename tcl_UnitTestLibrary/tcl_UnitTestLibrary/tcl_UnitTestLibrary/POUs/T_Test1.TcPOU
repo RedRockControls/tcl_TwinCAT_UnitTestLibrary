@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="T_Test1" Id="{38fce957-6a84-4940-8b00-735d0a8d36e5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_Test1 EXTENDS T_UnitTestBase IMPLEMENTS I_UnitTest
+VAR
+	Value : INT := 7;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="RunTest" Id="{4703f096-77af-4272-9877-be9134bb7616}">
+      <Declaration><![CDATA[{attribute 'analysis' := '-33'} // inhibit unused variable warning
+METHOD  RunTest
+VAR_INST
+	OnTimer : T_OnTimer(PresetTime := 1.5);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE State OF
+    0:
+        OnTimer.Reset();
+        Value := 5;
+        F_Inc(State);
+    1:
+        AssertEquals_INT(Expected := 7, Actual := Value, Message := 'Value');
+        F_Inc(State);
+
+    2:
+        IF OnTimer.Run() THEN
+            _Completed := TRUE;
+        END_IF
+
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

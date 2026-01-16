@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <Itf Name="I_UnitTest" Id="{e7ace125-aff6-4edc-9ce4-a950f62e4294}">
+    <Declaration><![CDATA[INTERFACE I_UnitTest
+]]></Declaration>
+    <Folder Name="Methods" Id="{9b07d7a0-2157-44c3-8089-d52e90e9746a}" />
+    <Folder Name="Properties" Id="{45c02eed-13da-4303-a97f-94fd89423fa4}" />
+    <Property Name="Completed" Id="{ceddfcba-3584-4c89-b760-8abfe8f64e3e}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Completed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{95e00375-cfdd-418f-b9cc-5d9e5c44b87b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="ElapsedTime" Id="{87761137-160c-427c-9ffa-79d0d9e79107}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY ElapsedTime : LREAL]]></Declaration>
+      <Get Name="Get" Id="{efb53222-3b3a-487f-8233-0b5c0ce74019}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{128287f6-951c-4d6a-b99e-3484a581f397}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Enabled" Id="{0fd32017-6cb3-418d-96f3-64ad8de35cbf}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Enabled : BOOL]]></Declaration>
+      <Get Name="Get" Id="{f803c792-4bd2-4b09-b422-5f57d84629eb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{df8a14df-7e3c-40ac-998d-233cc3bd3914}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Failed" Id="{f049d384-0339-40b1-a29a-59ca126058dc}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY Failed : BOOL]]></Declaration>
+      <Get Name="Get" Id="{9d4ee5fd-d3b4-42aa-b322-25d8832fc142}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="Init" Id="{0070e2d3-2c88-4de8-b50b-bca92dc618a6}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Init
+VAR
+
+END_VAR
+]]></Declaration>
+    </Method>
+    <Property Name="Name" Id="{af23d7a5-1c80-4f3e-b789-cf06b7456a6f}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY Name : T_MaxString
+]]></Declaration>
+      <Get Name="Get" Id="{dfa5f1ed-0918-44e3-b917-b7df5463ead6}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Method Name="RunTest" Id="{1dfe662b-283e-4e01-a0d1-526e515dd1dc}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD ABSTRACT RunTest
+]]></Declaration>
+    </Method>
+    <Property Name="TestStatus" Id="{f49381c6-3bca-4e86-bf10-0bc7df8816f3}" FolderPath="Properties\">
+      <Declaration><![CDATA[{attribute 'monitoring' := 'call'}
+PROPERTY TestStatus : E_TestStatus]]></Declaration>
+      <Get Name="Get" Id="{22165913-91e6-40b4-9e0b-0b23ec3242fb}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+      <Set Name="Set" Id="{cb82d1e2-d704-49fa-b8f4-b42d3625d4ab}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

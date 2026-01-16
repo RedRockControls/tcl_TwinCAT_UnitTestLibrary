@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="PB_UnitTests" Id="{11d29a6e-06e7-4cc4-9e24-38d314218fa7}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PB_UnitTests
+VAR
+	TestRunner : T_TestRunner;
+	
+	Test1 : T_Test1;
+	Test2 : T_Test2;
+	Test3 : T_Test3;
+	
+	Init : BOOL := TRUE;
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF Init THEN
+	Init := FALSE;
+	TestRunner.ClearTests();
+	TestRunner.AddTest(Test1);
+	TestRunner.AddTest(Test2);
+	TestRunner.AddTest(Test3);
+END_IF
+
+TestRunner.CyclicUpdate();]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

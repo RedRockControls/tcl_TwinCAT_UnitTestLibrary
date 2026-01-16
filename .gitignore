@@ -10,3 +10,8 @@
 *.bak
 _CompileInfo/
 LineIDs.dbg
+tcl_UnitTestLibrary/Packages
+C Sharp/Ads Interface/bin
+C Sharp/Ads Interface/obj
+C Sharp/Hmi/bin
+C Sharp/Hmi/obj

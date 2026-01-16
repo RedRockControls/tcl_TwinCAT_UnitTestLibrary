@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <POU Name="T_TestRunner" Id="{080374a4-66ac-402a-86f6-4d90944aad10}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner // TODO - remove TestStatus, move contents into T_UnitTestBase
+VAR
+    TaskTime          : LREAL;
+    RunTests          : BOOL;
+    Abort             : BOOL;
+    EnableAllTests    : BOOL;
+    DisableAllTests   : BOOL;
+    Tests             : ARRAY[0..MaxTests] OF I_UnitTest;
+    TestCount         : INT;
+    FailedCount       : INT;
+    CompletedCount    : INT;
+    DisabledCount     : INT;
+    CurrentTestNumber : INT;
+    i                 : INT;
+    TestsCompleted    : BOOL;
+    SourceInfo        : FB_TcSourceInfo := (sName := 'Test Runner');
+
+    State :
+        (
+        sInit,
+        sInitialiseTests,
+        sRunTests,
+        sTestsCompleted);
+    MessageBuffer : T_MessageBuffer;
+
+END_VAR
+VAR CONSTANT
+    MaxTests : INT := 100;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="AddTest" Id="{e2a1a1dc-6fab-463d-877b-fc28eeb7eaea}">
+      <Declaration><![CDATA[METHOD AddTest : BOOL
+VAR_INPUT
+	Test : I_UnitTest;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF State = sInit AND TestCount <= MaxTests THEN
+    Tests[TestCount] := Test;
+    F_Inc(TestCount);
+    AddTest := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ClearTests" Id="{835dd897-a63a-408f-ba98-7b759c4bd8f6}">
+      <Declaration><![CDATA[METHOD ClearTests
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF State = sInit THEN
+    FOR i := 0 TO MaxTests DO
+        Tests[i] := 0;
+    END_FOR
+    TestCount      := 0;
+    FailedCount    := 0;
+    CompletedCount := 0;
+    DisabledCount  := 0;
+	TestsCompleted := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicUpdate" Id="{96e7c6f8-6766-4cc1-aafc-6e0c6696f116}">
+      <Declaration><![CDATA[METHOD CyclicUpdate
+VAR_INST
+    RisingEdge1 : T_RisingEdge;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF TaskTime = 0 THEN
+    TaskTime := F_TaskTime();
+END_IF
+
+CASE State OF
+    sInit:
+        IF F_ReadFlag(RunTests) THEN
+            IF TestCount > 0 AND TestCount <= MaxTests THEN
+                State := sInitialiseTests;
+            END_IF
+        END_IF
+
+        IF F_ReadFlag(EnableAllTests) AND TestCount > 0 THEN
+            FOR i := 0 TO TestCount - 1 DO
+                Tests[i].Enabled := TRUE;
+            END_FOR
+        END_IF
+
+        IF F_ReadFlag(DisableAllTests) AND TestCount > 0 THEN
+            FOR i := 0 TO TestCount - 1 DO
+                Tests[i].Enabled := FALSE;
+            END_FOR
+        END_IF
+
+    sInitialiseTests:
+        TestsCompleted := FALSE;
+        FailedCount    := 0;
+        CompletedCount := 0;
+        DisabledCount  := 0;
+        FOR i := 0 TO TestCount - 1 DO
+            IF Tests[i] <> 0 THEN
+                Tests[i].Init();
+            END_IF
+        END_FOR
+        CurrentTestNumber := 0;
+        State             := sRunTests;
+
+    sRunTests:
+        IF F_ReadFlag(Abort) THEN
+            tcl_BaseClasses.DefaultLogger.LogWarning(SourceInfo, 'Testing aborted');
+            State := sTestsCompleted;
+        ELSIF CurrentTestNumber >= TestCount THEN
+            State := sTestsCompleted;
+        ELSE
+            IF Tests[CurrentTestNumber] = 0 THEN
+                F_Inc(CurrentTestNumber);
+
+            ELSIF NOT Tests[CurrentTestNumber].Enabled THEN
+                F_Inc(DisabledCount);
+                F_Inc(CurrentTestNumber);
+
+            ELSIF Tests[CurrentTestNumber].Completed THEN
+                IF Tests[CurrentTestNumber].Failed THEN
+                    Tests[CurrentTestNumber].TestStatus := E_TestStatus.Failed;
+                    F_Inc(FailedCount);
+                ELSE
+                    Tests[CurrentTestNumber].TestStatus := E_TestStatus.Passed;
+                END_IF
+                F_Inc(CurrentTestNumber);
+                F_Inc(CompletedCount);
+
+            ELSE
+                Tests[CurrentTestNumber].TestStatus  := E_TestStatus.Running;
+                Tests[CurrentTestNumber].ElapsedTime := Tests[CurrentTestNumber].ElapsedTime + TaskTime;
+                Tests[CurrentTestNumber].RunTest();
+
+            END_IF
+        END_IF
+
+    sTestsCompleted:
+        TestsCompleted := TRUE;
+        tcl_BaseClasses.DefaultLogger.LogInfo(SourceInfo, FormatString2('%d tests completed, %d tests failed', F_INT(CompletedCount), F_INT(FailedCount)));
+        CurrentTestNumber := -1;
+        State             := sInit;
+
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

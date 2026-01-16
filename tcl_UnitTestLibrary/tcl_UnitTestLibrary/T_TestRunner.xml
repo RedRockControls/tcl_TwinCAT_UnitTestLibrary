@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2025-10-02T10:40:56.3759978" />
+  <contentHeader name="tcl_UnitTestLibrary" modificationDateTime="2025-10-02T10:40:56.3799977">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes />
+    <pous>
+      <pou name="T_TestRunner" pouType="functionBlock">
+        <interface>
+          <localVars>
+            <variable name="Tests">
+              <type>
+                <array>
+                  <dimension lower="0" upper="MaxTests" />
+                  <baseType>
+                    <derived name="I_UnitTest" />
+                  </baseType>
+                </array>
+              </type>
+            </variable>
+            <variable name="TestStatus">
+              <type>
+                <array>
+                  <dimension lower="0" upper="MaxTests" />
+                  <baseType>
+                    <derived name="ST_TestStatus" />
+                  </baseType>
+                </array>
+              </type>
+            </variable>
+            <variable name="Count">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="FailedCount">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="CompletedCount">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="DisabledCount">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="i">
+              <type>
+                <INT />
+              </type>
+            </variable>
+            <variable name="TestsCompleted">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="SourceInfo">
+              <type>
+                <derived name="FB_TcSourceInfo" />
+              </type>
+              <initialValue>
+                <structValue>
+                  <value member="sName">
+                    <simpleValue value="'Test Runner'" />
+                  </value>
+                </structValue>
+              </initialValue>
+            </variable>
+            <variable name="_Bob">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+          </localVars>
+          <localVars constant="true">
+            <variable name="MaxTests">
+              <type>
+                <INT />
+              </type>
+              <initialValue>
+                <simpleValue value="100" />
+              </initialValue>
+            </variable>
+          </localVars>
+        </interface>
+        <body>
+          <ST>
+            <xhtml xmlns="http://www.w3.org/1999/xhtml" />
+          </ST>
+        </body>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="AddTest" ObjectId="5ebd16ac-f29c-4f8c-af24-a6b6bfa35819">
+              <interface>
+                <inputVars>
+                  <variable name="UnitTest">
+                    <type>
+                      <derived name="I_UnitTest" />
+                    </type>
+                  </variable>
+                </inputVars>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">IF Count &lt;= MaxTests THEN
+    Tests[Count]           := UnitTest;
+    TestStatus[Count].Name := UnitTest.Name;
+    Count                  := Count + 1;
+END_IF
+</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD AddTest
+VAR_INPUT
+	UnitTest : I_UnitTest;
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="ClearTests" ObjectId="835dd897-a63a-408f-ba98-7b759c4bd8f6">
+              <interface />
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">FOR i := 0 TO MaxTests DO
+    Tests[i] := 0;
+END_FOR
+Count          := 0;
+FailedCount    := 0;
+CompletedCount := 0;
+</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD ClearTests
+VAR_INPUT
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="CyclicUpdate" ObjectId="96e7c6f8-6766-4cc1-aafc-6e0c6696f116">
+              <interface />
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">FailedCount    := 0;
+CompletedCount := 0;
+DisabledCount  := 0;
+
+IF Count &gt; 0 AND Count &lt;= MaxTests THEN
+    FOR i := 0 TO Count DO
+        IF Tests[i] = 0 THEN
+            TestStatus[i].Status := E_TestStatus.Unknown; 
+			
+        ELSIF Tests[i].TestDisabled THEN
+            TestStatus[i].Status := E_TestStatus.Disabled; 
+            F_Inc(DisabledCount);
+			
+        ELSE
+            Tests[i].RunTest();
+            IF Tests[i].TestCompleted THEN
+				IF Tests[i].TestFailed THEN
+					TestStatus[i].Status := E_TestStatus.Failed; 
+					F_Inc(FailedCount);
+				ELSE
+					TestStatus[i].Status := E_TestStatus.Passed; 
+				END_IF
+                F_Inc(CompletedCount);
+			ELSE
+					TestStatus[i].Status := E_TestStatus.Running; 
+            END_IF
+			
+        END_IF
+    END_FOR
+    TestsCompleted := (CompletedCount + DisabledCount = Count);
+    IF RisingEdge1.Test(TestsCompleted) THEN
+        DefaultLogger.LogInfo(SourceInfo, FormatString2('%d tests completed, %d tests failed', F_INT(CompletedCount), F_INT(FailedCount)));
+    END_IF
+END_IF
+</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD CyclicUpdate
+VAR_INST
+    RisingEdge1 : T_RisingEdge;
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="DisableTest" ObjectId="ab151484-63d2-43f3-8829-22e468606fd1">
+              <interface>
+                <inputVars>
+                  <variable name="TestIndex">
+                    <type>
+                      <INT />
+                    </type>
+                  </variable>
+                  <variable name="Disable">
+                    <type>
+                      <BOOL />
+                    </type>
+                  </variable>
+                </inputVars>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">IF TestIndex &gt;= 0 AND TestIndex &lt;= Count THEN
+    Tests[i].TestDisabled := Disable;
+END_IF
+</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">METHOD DisableTest
+VAR_INPUT
+    TestIndex : INT;
+    Disable   : BOOL;
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="Retest" ObjectId="444061de-9436-4d30-a32a-62cd98530e32">
+              <interface>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+                    <Attributes>
+                      <Attribute Name="TcRpcEnable" Value="" />
+                    </Attributes>
+                  </data>
+                </addData>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">IF Count &gt; 0 AND Count &lt;= MaxTests THEN
+    FOR i := 0 TO Count DO
+        IF Tests[i] = 0 THEN
+            ; // ignore
+        ELSIF Tests[i].TestDisabled THEN
+            ; // ignore
+        ELSE
+            Tests[i].Retest();
+        END_IF
+    END_FOR
+END_IF
+</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">{attribute 'TcRpcEnable'} 
+METHOD Retest
+VAR_INPUT
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/method" handleUnknown="implementation">
+            <Method name="SetBob" ObjectId="8be1ef5c-cb86-4478-b2f2-b29f5aaf2a68">
+              <interface>
+                <addData>
+                  <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+                    <Attributes>
+                      <Attribute Name="TcRpcEnable" Value="" />
+                    </Attributes>
+                  </data>
+                </addData>
+              </interface>
+              <body>
+                <ST>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">_Bob := TRUE;</xhtml>
+                </ST>
+              </body>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">{attribute 'TcRpcEnable'} 
+METHOD SetBob
+VAR_INPUT
+END_VAR
+</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Method>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/property" handleUnknown="implementation">
+            <Property name="Bob" ObjectId="becd8e57-a01b-4861-ade6-7995843bfe89">
+              <interface>
+                <returnType>
+                  <BOOL />
+                </returnType>
+                <Attributes>
+                  <Attribute Name="monitoring" Value="call" />
+                </Attributes>
+              </interface>
+              <GetAccessor>
+                <interface>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+                      <Attributes>
+                        <Attribute Name="monitoring" Value="call" />
+                      </Attributes>
+                    </data>
+                  </addData>
+                </interface>
+                <body>
+                  <ST>
+                    <xhtml xmlns="http://www.w3.org/1999/xhtml">Bob := _Bob;</xhtml>
+                  </ST>
+                </body>
+                <InterfaceAsPlainText>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">VAR
+END_VAR
+</xhtml>
+                </InterfaceAsPlainText>
+                <addData />
+              </GetAccessor>
+              <SetAccessor>
+                <interface>
+                  <addData>
+                    <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+                      <Attributes>
+                        <Attribute Name="monitoring" Value="call" />
+                      </Attributes>
+                    </data>
+                  </addData>
+                </interface>
+                <body>
+                  <ST>
+                    <xhtml xmlns="http://www.w3.org/1999/xhtml">_Bob := Bob;</xhtml>
+                  </ST>
+                </body>
+                <InterfaceAsPlainText>
+                  <xhtml xmlns="http://www.w3.org/1999/xhtml">VAR
+END_VAR
+</xhtml>
+                </InterfaceAsPlainText>
+                <addData />
+              </SetAccessor>
+              <InterfaceAsPlainText>
+                <xhtml xmlns="http://www.w3.org/1999/xhtml">{attribute 'monitoring' := 'call'}
+PROPERTY Bob : BOOL</xhtml>
+              </InterfaceAsPlainText>
+              <addData />
+            </Property>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">FUNCTION_BLOCK T_TestRunner
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+    Tests          : ARRAY[0..MaxTests] OF I_UnitTest;
+	TestStatus     : ARRAY[0..MaxTests] OF ST_TestStatus;
+    Count          : INT;
+    FailedCount    : INT;
+    CompletedCount : INT;
+    DisabledCount  : INT;
+    i              : INT;
+    TestsCompleted : BOOL;
+    SourceInfo     : FB_TcSourceInfo := (sName := 'Test Runner');
+	_Bob : BOOL;
+END_VAR
+VAR CONSTANT
+    MaxTests : INT := 100;
+END_VAR
+</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>080374a4-66ac-402a-86f6-4d90944aad10</ObjectId>
+          </data>
+        </addData>
+      </pou>
+    </pous>
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="T_TestRunner" ObjectId="080374a4-66ac-402a-86f6-4d90944aad10">
+          <Object Name="AddTest" ObjectId="5ebd16ac-f29c-4f8c-af24-a6b6bfa35819" />
+          <Object Name="Bob" ObjectId="becd8e57-a01b-4861-ade6-7995843bfe89" />
+          <Object Name="ClearTests" ObjectId="835dd897-a63a-408f-ba98-7b759c4bd8f6" />
+          <Object Name="CyclicUpdate" ObjectId="96e7c6f8-6766-4cc1-aafc-6e0c6696f116" />
+          <Object Name="DisableTest" ObjectId="ab151484-63d2-43f3-8829-22e468606fd1" />
+          <Object Name="Retest" ObjectId="444061de-9436-4d30-a32a-62cd98530e32" />
+          <Object Name="SetBob" ObjectId="8be1ef5c-cb86-4478-b2f2-b29f5aaf2a68" />
+        </Object>
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>

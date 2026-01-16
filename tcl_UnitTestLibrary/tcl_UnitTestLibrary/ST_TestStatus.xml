@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://www.plcopen.org/xml/tc6_0200">
+  <fileHeader companyName="Beckhoff Automation GmbH" productName="TwinCAT PLC Control" productVersion="3.5.13.21" creationDateTime="2025-10-02T10:52:22.4656752" />
+  <contentHeader name="tcl_UnitTestLibrary" modificationDateTime="2025-10-02T10:52:22.4656752">
+    <coordinateInfo>
+      <fbd>
+        <scaling x="1" y="1" />
+      </fbd>
+      <ld>
+        <scaling x="1" y="1" />
+      </ld>
+      <sfc>
+        <scaling x="1" y="1" />
+      </sfc>
+    </coordinateInfo>
+    <addData>
+      <data name="http://www.3s-software.com/plcopenxml/projectinformation" handleUnknown="implementation">
+        <ProjectInformation />
+      </data>
+    </addData>
+  </contentHeader>
+  <types>
+    <dataTypes>
+      <dataType name="ST_TestStatus">
+        <baseType>
+          <struct>
+            <variable name="Name">
+              <type>
+                <string length="255" />
+              </type>
+            </variable>
+            <variable name="Status">
+              <type>
+                <derived name="E_TestStatus" />
+              </type>
+            </variable>
+            <variable name="Disabled">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="StatusMessage">
+              <type>
+                <string length="255" />
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE
+    ST_TestStatus :
+    STRUCT
+        Name          : STRING(255);
+        Status        : E_TestStatus;
+        Disabled      : BOOL;
+        StatusMessage : STRING(255);
+    END_STRUCT
+END_TYPE
+</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>5c36c51d-c78d-4658-84ab-d7cba29bc0b5</ObjectId>
+          </data>
+        </addData>
+      </dataType>
+      <dataType name="ST_HmiInterface">
+        <baseType>
+          <struct>
+            <variable name="Retest">
+              <type>
+                <BOOL />
+              </type>
+            </variable>
+            <variable name="TestStatus">
+              <type>
+                <array>
+                  <dimension lower="0" upper="100" />
+                  <baseType>
+                    <derived name="ST_TestStatus" />
+                  </baseType>
+                </array>
+              </type>
+            </variable>
+          </struct>
+        </baseType>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">TYPE ST_HmiInterface :
+STRUCT
+	Retest : BOOL;
+	TestStatus     : ARRAY[0..100] OF ST_TestStatus;
+END_STRUCT
+END_TYPE
+</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>3fc593ea-ac26-456f-a9b5-2e1deeeeab60</ObjectId>
+          </data>
+        </addData>
+      </dataType>
+      <dataType name="E_TestStatus">
+        <baseType>
+          <enum>
+            <values>
+              <value name="Unknown" value="0" />
+              <value name="Running" />
+              <value name="Passed" />
+              <value name="Failed" />
+              <value name="Disabled" />
+            </values>
+          </enum>
+        </baseType>
+        <addData>
+          <data name="http://www.3s-software.com/plcopenxml/attributes" handleUnknown="implementation">
+            <Attributes>
+              <Attribute Name="qualified_only" Value="" />
+              <Attribute Name="strict" Value="" />
+            </Attributes>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/interfaceasplaintext" handleUnknown="implementation">
+            <InterfaceAsPlainText>
+              <xhtml xmlns="http://www.w3.org/1999/xhtml">{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TestStatus :
+(
+	Unknown := 0,
+	Running,
+	Passed,
+	Failed,
+	Disabled
+);
+END_TYPE
+</xhtml>
+            </InterfaceAsPlainText>
+          </data>
+          <data name="http://www.3s-software.com/plcopenxml/objectid" handleUnknown="discard">
+            <ObjectId>338ac160-7013-4881-b326-13bd949cceb7</ObjectId>
+          </data>
+        </addData>
+      </dataType>
+    </dataTypes>
+    <pous />
+  </types>
+  <instances>
+    <configurations />
+  </instances>
+  <addData>
+    <data name="http://www.3s-software.com/plcopenxml/projectstructure" handleUnknown="discard">
+      <ProjectStructure>
+        <Object Name="ST_TestStatus" ObjectId="5c36c51d-c78d-4658-84ab-d7cba29bc0b5" />
+        <Object Name="ST_HmiInterface" ObjectId="3fc593ea-ac26-456f-a9b5-2e1deeeeab60" />
+        <Object Name="E_TestStatus" ObjectId="338ac160-7013-4881-b326-13bd949cceb7" />
+      </ProjectStructure>
+    </data>
+  </addData>
+</project>

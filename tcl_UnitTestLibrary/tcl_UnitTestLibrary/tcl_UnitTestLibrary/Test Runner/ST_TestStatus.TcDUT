@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="ST_TestStatus" Id="{97aef56a-3abd-49c3-bf99-2a96c32bf735}">
+    <Declaration><![CDATA[TYPE
+    ST_TestStatus :
+    STRUCT
+        Name    : T_MaxString;
+        Status  : E_TestStatus;
+        Enabled : BOOL := TRUE;
+    END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <DUT Name="E_TestStatus" Id="{338ac160-7013-4881-b326-13bd949cceb7}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_TestStatus :
+(
+	Unknown := 0,
+	Running,
+	Passed,
+	Failed
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
