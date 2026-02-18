@@ -587,22 +587,21 @@ namespace AdsInterface
     {
         private String currentValue;
 
-        public T_STRING(TAds Ads, string SymbolName)
+        public T_STRING(TAds Ads, string SymbolName, int StringLengthIncludingNullTermination) 
         {
             this.Ads = Ads;
             this.SymbolName = SymbolName;
-            this.Length = 81;//TODO - read this length from export file
+            this.Length = StringLengthIncludingNullTermination;
 
 			stream = new AdsStream(Length);
 			reader = new AdsBinaryReader(stream);
 			writer = new AdsBinaryWriter(stream);
 		}
 
-        public T_STRING()
-            : base()
-        {
-            this.Length = 81;
-        }
+        //public T_STRING() : base()
+        //{
+        //    this.Length = 81;
+        //}
 
         public void SetValue(string newValue) // set current value without triggering a write to the plc
         {
@@ -630,7 +629,7 @@ namespace AdsInterface
 
             if ((cb == Length))
             {
-                currentValue = reader.ReadPlcAnsiString(81);
+                currentValue = reader.ReadPlcAnsiString(Length);
             }
             else
             {
@@ -641,7 +640,7 @@ namespace AdsInterface
         public void WriteToPLC()
         {
 			stream.Position = 0;
-			writer.WritePlcAnsiString(currentValue, currentValue.Length + 1);
+			writer.WritePlcAnsiString(currentValue, currentValue.Length + 1); // need to include null termination
             Ads.Write(SymbolName, stream);
         }
 

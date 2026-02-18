@@ -14,36 +14,26 @@ namespace AdsInterface
 
 		public bool Connected = true;
 
-		public TAds(int Port) // Connects to local target
-		{
-			adsClient = new TcAdsClient();
-			adsStream = new AdsStream(1024);
-			adsReader = new AdsBinaryReader(adsStream);
-			adsClient.Connect("", Port);
-			adsClient.Timeout = 200;
-			ConnectionList = new Dictionary<int, string>();
-			adsClient.AdsNotification += new AdsNotificationEventHandler(adsClient_AdsNotification);
-		}
+        public TAds()
+        {
+            adsClient = new TcAdsClient();
+            adsStream = new AdsStream(1024);
+            adsReader = new AdsBinaryReader(adsStream);
+            adsClient.Timeout = 200;
+            ConnectionList = new Dictionary<int, string>();
+        }
 
-		public TAds(string AmsNetId, int Port) // Connects to target specified by static property
-		{
-			adsClient = new TcAdsClient();
-			adsStream = new AdsStream(1024);
-			adsReader = new AdsBinaryReader(adsStream);
-			adsClient.Connect(AmsNetId, Port);
-			adsClient.Timeout = 200;
-			ConnectionList = new Dictionary<int, string>();
-			adsClient.AdsNotification += new AdsNotificationEventHandler(adsClient_AdsNotification);
-		}
+         public void Connect(string AmsNetId, int Port)
+        {
+            adsClient.Connect(AmsNetId, Port);
+            adsClient.AdsNotification += new AdsNotificationEventHandler(adsClient_AdsNotification);
+        }
 
-		public void ChangeServer(string NewAmsNetId, int NewPort) 
-		{
-			if (NewAmsNetId != adsClient.Address.NetId.ToString()) // different to current connection
-			{
-				DisconnectFromPlc();//clear current connections
-				adsClient.Connect(NewAmsNetId, NewPort);//make new connection
-			}
-		}
+        public void Disconnect()
+        {
+            adsClient.Disconnect();
+            ConnectionList.Clear();
+        }
 
 		public void Dispose()
 		{
@@ -75,8 +65,11 @@ namespace AdsInterface
 		{
 			try
 			{
-				adsClient.DeleteDeviceNotification(PLC_Value.ConnectionHandle);
-				ConnectionList.Remove(PLC_Value.ConnectionHandle);
+                if (ConnectionList.ContainsKey(PLC_Value.ConnectionHandle))
+                {
+				    adsClient.DeleteDeviceNotification(PLC_Value.ConnectionHandle);
+				    ConnectionList.Remove(PLC_Value.ConnectionHandle);
+                }
 			}
 			catch (Exception ex)
 			{
@@ -98,6 +91,7 @@ namespace AdsInterface
 				}
 			}
 			ConnectionList.Clear();
+            Disconnect();
 		}
 
 		private void adsClient_AdsNotification(object sender, AdsNotificationEventArgs e)

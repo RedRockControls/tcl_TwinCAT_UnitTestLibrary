@@ -1,22 +1,9 @@
-﻿/*
- * Created by SharpDevelop.
- * User: Roger Christopher
- * Date: 09/12/2010
- * Time: 17:03
- * 
- * To change this template use Tools | Options | Coding | Edit Standard Headers.
- */
-using System;
+﻿using System;
 using System.Windows.Forms;
-using System.Linq;
-using System.ComponentModel;
 using AdsInterface;
 
 namespace GapControllerHmi
 {
-    /// <summary>
-    /// Description of MainForm.
-    /// </summary>
     public partial class MainForm : Form
     {
         private TAds Ads;
@@ -25,9 +12,9 @@ namespace GapControllerHmi
         public MainForm()
         {
             InitializeComponent();
-            Ads = new TAds(851);
-            //Ads = new TAds("192.168.0.150.1.1", 851);
+            Ads = new TAds();
             TestRunner = new T_TestRunner(Ads, "PB_UnitTests.TestRunner", dataGrid_TestList);
+            TestRunner.Connect(txtAmsNetId.Text, Convert.ToInt32(txtPort.Text));
 
             dataGrid_TestList.DataSource = TestRunner.testStatusList;
             dataGrid_TestList.Columns[0].ReadOnly = true;
@@ -45,19 +32,6 @@ namespace GapControllerHmi
             TestRunner.RunTests.Value = true;
             TestRunner.RunTests.WriteToPLC();
         }
-
-        //private void EnterDoubleValue(T_LREAL PlcValue, string CurrentValue)
-        //{
-        //    Keypad.TfrmTextPad kp = new Keypad.TfrmTextPad();
-
-        //    kp.EnteredText = CurrentValue;
-        //    if (kp.ShowDialog(this) == DialogResult.OK)
-        //    {
-        //        double result;
-        //        if (double.TryParse(kp.EnteredText, out result))
-        //            PlcValue.Value = result;
-        //    }
-        //}
 
         private void btnExit_Click(object sender, EventArgs e)
         {
@@ -100,9 +74,20 @@ namespace GapControllerHmi
             TestRunner.InitialiseTestStatusFromPlc(Ads);
         }
 
-        private void btnAbort_Click(object sender, EventArgs e)
+        private void btnReconnect_Click(object sender, EventArgs e)
+        {
+            TestRunner.Connect(txtAmsNetId.Text,Convert.ToInt32(txtPort.Text));
+        }
+
+        private void btnAbort_MouseDown(object sender, MouseEventArgs e)
         {
             TestRunner.Abort.Value = true;
+            TestRunner.Abort.WriteToPLC();
+        }
+
+        private void btnAbort_MouseUp(object sender, MouseEventArgs e)
+        {
+            TestRunner.Abort.Value = false;
             TestRunner.Abort.WriteToPLC();
         }
     }

@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.2.3.0</ProjectVersion>
+    <ProjectVersion>1.2.5.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,22 +30,13 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>RunTests request only permitted in sInit state</Description>
+    <Description>tcl_StringUtils lib used</Description>
     <CompilerDefines />
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Functions\F_LogError.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Functions\F_LogMessage.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Globals.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
-    </Compile>
-    <Compile Include="Message Buffer\T_MessageBuffer.TcPOU">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
@@ -61,24 +52,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\T_Test3.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\FormatString2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\FormatString1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\FormatString3.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\FormatStringEx1.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\FormatStringEx2.TcPOU">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="String Utils\StringSplitter.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Test Runner\E_TestStatus.TcDUT">
@@ -101,11 +74,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Functions" />
-    <Folder Include="Message Buffer" />
     <Folder Include="POUs" />
     <Folder Include="Test Runner" />
-    <Folder Include="String Utils" />
     <Folder Include="Unit Test" />
     <Folder Include="Version" />
   </ItemGroup>
@@ -133,6 +103,10 @@
     <PlaceholderReference Include="tcl_BaseClasses">
       <DefaultResolution>tcl_BaseClasses, * (Red Rock Controls Limited)</DefaultResolution>
       <Namespace>tcl_BaseClasses</Namespace>
+    </PlaceholderReference>
+    <PlaceholderReference Include="tcl_StringUtils">
+      <DefaultResolution>tcl_StringUtils, * (Red Rock Controls Limited)</DefaultResolution>
+      <Namespace>tcl_StringUtils</Namespace>
     </PlaceholderReference>
   </ItemGroup>
   <ItemGroup>
