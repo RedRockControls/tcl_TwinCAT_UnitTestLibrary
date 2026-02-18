@@ -119,6 +119,7 @@ CASE State OF
     sRunTests:
         IF F_ReadFlag(Abort) THEN
             tcl_BaseClasses.DefaultLogger.LogWarning(SourceInfo, 'Testing aborted');
+			Tests[CurrentTestNumber].Abort();
             State := sTestsCompleted;
         ELSIF CurrentTestNumber >= TestCount THEN
             State := sTestsCompleted;
@@ -155,6 +156,7 @@ CASE State OF
         State             := sInit;
 
 END_CASE
+
 ]]></ST>
       </Implementation>
     </Method>

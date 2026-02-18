@@ -5,6 +5,12 @@
 ]]></Declaration>
     <Folder Name="Methods" Id="{9b07d7a0-2157-44c3-8089-d52e90e9746a}" />
     <Folder Name="Properties" Id="{45c02eed-13da-4303-a97f-94fd89423fa4}" />
+    <Method Name="Abort" Id="{1e5dda0c-1e8f-4ec3-98bb-a2e22bc546ff}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Abort
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
     <Property Name="Completed" Id="{ceddfcba-3584-4c89-b760-8abfe8f64e3e}" FolderPath="Properties\">
       <Declaration><![CDATA[PROPERTY Completed : BOOL]]></Declaration>
       <Get Name="Get" Id="{95e00375-cfdd-418f-b9cc-5d9e5c44b87b}">

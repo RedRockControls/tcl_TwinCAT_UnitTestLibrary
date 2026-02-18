@@ -30,6 +30,19 @@ END_VAR
       <Folder Name="Assertions" Id="{eeb32758-3083-4449-8104-3d7cd077ec0c}" />
     </Folder>
     <Folder Name="Properties" Id="{eb7e9c1f-ae66-405a-820c-688b53e1a9a9}" />
+    <Method Name="Abort" Id="{ea07d044-ff34-41be-8670-cc5c0235ccb1}" FolderPath="Methods\">
+      <Declaration><![CDATA[METHOD Abort
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[_TestStatus  := E_TestStatus.Aborted;
+_Failed      := FALSE;
+_Completed   := FALSE;
+State        := 0;
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="AssertEquals_ANY" Id="{8c39ac6a-e3a4-4e64-8b71-f758c94e977f}" FolderPath="Methods\Assertions\">
       <Declaration><![CDATA[METHOD PROTECTED AssertEquals_ANY : BOOL
 VAR_INPUT
@@ -128,9 +141,9 @@ END_VAR
     ActualAsString   := BOOL_TO_STRING(Actual);
     tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
                                            FormatString3('%s: expected=%s, actual=%s',
-                                                         F_STRING(Message),
-                                                         F_STRINGEX(ExpectedAsString),
-                                                         F_STRINGEX(ActualAsString)));
+                                                           F_STRING(Message),
+                                                           F_STRINGEX(ExpectedAsString),
+                                                           F_STRINGEX(ActualAsString)));
     _Failed := TRUE;
     RETURN;
 END_IF
@@ -555,8 +568,8 @@ END_VAR
     <Method Name="FB_init" Id="{d715a8ed-6e23-43db-9a26-7d5bf7af1708}" FolderPath="Methods\">
       <Declaration><![CDATA[METHOD FB_init : BOOL
 VAR_INPUT
-	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
-	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+    bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+    bInCopyCode  : BOOL; // if TRUE, the instance afterwards gets moved into the copy code (online change)
 END_VAR
 VAR
 	StringSplitter : StringSplitter;

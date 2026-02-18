@@ -8,7 +8,8 @@ TYPE E_TestStatus :
 	Unknown := 0,
 	Running,
 	Passed,
-	Failed
+	Failed,
+	Aborted
 );
 END_TYPE
 ]]></Declaration>
