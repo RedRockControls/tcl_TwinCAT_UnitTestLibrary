@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
   <POU Name="T_TestRunner" Id="{080374a4-66ac-402a-86f6-4d90944aad10}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK T_TestRunner // TODO - remove TestStatus, move contents into T_UnitTestBase
 VAR
@@ -24,7 +24,6 @@ VAR
         sInitialiseTests,
         sRunTests,
         sTestsCompleted);
-    MessageBuffer : T_MessageBuffer;
 
 END_VAR
 VAR CONSTANT
@@ -151,7 +150,7 @@ CASE State OF
 
     sTestsCompleted:
         TestsCompleted := TRUE;
-        tcl_BaseClasses.DefaultLogger.LogInfo(SourceInfo, FormatString2('%d tests completed, %d tests failed', F_INT(CompletedCount), F_INT(FailedCount)));
+        tcl_BaseClasses.DefaultLogger.LogInfo(SourceInfo, F_FormatString2('%d tests completed, %d tests failed', F_INT(CompletedCount), F_INT(FailedCount)));
         CurrentTestNumber := -1;
         State             := sInit;
 

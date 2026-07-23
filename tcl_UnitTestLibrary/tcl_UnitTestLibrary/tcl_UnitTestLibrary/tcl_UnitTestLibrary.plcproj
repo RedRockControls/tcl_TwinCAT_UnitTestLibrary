@@ -8,7 +8,7 @@
     <WriteProductVersion>true</WriteProductVersion>
     <GenerateTpy>false</GenerateTpy>
     <Name>tcl_UnitTestLibrary</Name>
-    <ProgramVersion>3.1.4023.0</ProgramVersion>
+    <ProgramVersion>3.1.4026.24</ProgramVersion>
     <Application>{e40807bb-832f-45b5-97fd-909168ae8314}</Application>
     <TypeSystem>{a7e92dba-8355-4c6f-bf3a-45d7b77ebe20}</TypeSystem>
     <Implicit_Task_Info>{3e61b47b-6d10-45f2-84f5-03dae3651578}</Implicit_Task_Info>
@@ -18,7 +18,7 @@
     <Released>false</Released>
     <Company>Red Rock Controls Limited</Company>
     <Title>tcl_UnitTestLibrary</Title>
-    <ProjectVersion>1.2.5.0</ProjectVersion>
+    <ProjectVersion>1.2.6.0</ProjectVersion>
     <LibraryCategories>
       <LibraryCategory>
         <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
@@ -30,8 +30,9 @@
       <Id>{0d08a09c-9493-4b37-a26c-544e7211ff2d}</Id>
     </SelectedLibraryCategories>
     <Author>Roger Christopher</Author>
-    <Description>tcl_StringUtils lib used</Description>
+    <Description>TestCompleted, TestFailed methods added</Description>
     <CompilerDefines />
+    <GlobalVersionStructureIncluded>true</GlobalVersionStructureIncluded>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Globals.TcGVL">

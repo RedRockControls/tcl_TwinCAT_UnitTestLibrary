@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
-<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.68" ClassName="CNestedPlcProjDef">
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.24" ClassName="CNestedPlcProjDef">
 	<Project GUID="{75084952-274E-476C-B561-408E43820B7F}" Name="tcl_UnitTestLibrary" PrjFilePath="..\..\tcl_UnitTestLibrary\tcl_UnitTestLibrary.plcproj" TmcFilePath="..\..\tcl_UnitTestLibrary\tcl_UnitTestLibrary.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcPath="tcl_UnitTestLibrary\tcl_UnitTestLibrary.tmc" TmcHash="{F4D837EA-0603-0BB1-F92E-3544F246CDA8}">
+		<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{497FA566-8E88-968F-8B16-3D6BEB35CD80}" TmcPath="tcl_UnitTestLibrary\tcl_UnitTestLibrary.tmc">
 			<Name>tcl_UnitTestLibrary Instance</Name>
 			<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 			<Contexts>
@@ -15,6 +15,7 @@
 					<CycleTime>10000000</CycleTime>
 				</Context>
 			</Contexts>
+			<JsonDynPous><![CDATA[null]]></JsonDynPous>
 			<TaskPouOids>
 				<TaskPouOid Prio="6" OTCID="#x08502001"/>
 			</TaskPouOids>
