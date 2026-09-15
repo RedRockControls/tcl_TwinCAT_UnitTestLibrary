@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.19">
   <POU Name="T_UnitTestBase" Id="{db1f4e28-4a18-401b-8b29-e7f500ef63dc}" SpecialFunc="None">
     <Declaration><![CDATA[{attribute 'reflection'}
 FUNCTION_BLOCK ABSTRACT T_UnitTestBase
@@ -346,10 +346,12 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF Expected <> Actual THEN
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo, Message);
     tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
-                                           F_FormatString3('%s: expected=%s, actual=%s',
-                                                         F_STRING(Message),
-                                                         F_STRING(Expected),
+                                           F_FormatString1('Expected=%s',
+                                                         F_STRING(Expected)));
+    tcl_BaseClasses.DefaultLogger.LogError(SourceInfo,
+                                           F_FormatString1('Actual=%s',
                                                          F_STRING(Actual)));
     _Failed := TRUE;
     RETURN;
